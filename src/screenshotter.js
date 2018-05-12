@@ -6,7 +6,7 @@ global.screenshotter = {
 		var page = await browser.newPage();
 		await page.setViewport({width: 1440, height: 900});
 		await page.goto('http://www.multiplayerpiano.com/lobby');
-		await page.evaluate(function(){ document.getElementById('modal').click() } });
+		await page.evaluate(function(){ document.getElementById('modal').click() });
 		await new Promise(resolve => setTimeout(resolve, 5000));
 		var screenshot = await page.screenshot({type: 'png'});
 		var filename = `Screenshot of www.multiplayerpiano.com/lobby @ ${new Date().toISOString()}.png`;
