@@ -1,7 +1,7 @@
 global.exitHook = require('async-exit-hook');
 global.Discord = require('discord.js');
 global.fs = require('fs');
-global.config = require('./config.json');
+global.config = require('./config');
 global.dClient = new Discord.Client({ disableEveryone: true });
 
 console._log = console.log;
@@ -35,7 +35,7 @@ process.on('uncaughtException', error => {
 
 (require('mongodb').MongoClient).connect(process.env.MONGODB_URI).then(client=>{
 	global.mdbClient = client;
-	dClient.login(config.testmode ? config.test_token : config.token);
+	dClient.login(config.token);
 });
 
 dClient.once('ready', () => {
@@ -47,9 +47,6 @@ dClient.once('ready', () => {
 	require('./screenshotter.js');
 	require('./misc.js');
 
-	// backup
-	dClient.channels.get('394962139644690432').send(new Discord.MessageAttachment(global['files.zip'], 'files.zip'));
-	delete global['files.zip'];
 });
 dClient.on('error', console.error);
 dClient.on('warn', console.warn);
