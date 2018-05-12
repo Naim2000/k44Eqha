@@ -44,8 +44,6 @@ dClient.once('ready', () => {
 	require('./commands.js');
 		require('./colorroles.js');
 		require('./mppbridger.js');
-	require('./owopbridge.js');
-	//require('./awakensbridge.js');
 	require('./screenshotter.js');
 	require('./misc.js');
 
