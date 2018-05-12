@@ -465,7 +465,7 @@ commands.list = {
 		var names = [];
 		for (let person in ppl) {
 			person = ppl[person];
-			names.push(`\`${person._id.substr(0,6)}\` ${person.name}`);
+			names.push(`\`${person._id.substr(0,6)}\` ${person.name.replace(/<@/g, "<\\@")}`);
 		}
 		str += names.join(', ');
 		message.channel.send(str, {split:{char:''}});
