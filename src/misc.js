@@ -19,10 +19,10 @@
     dClient.on('voiceStateUpdate', (oldMember, newMember) => {
         if (oldMember.voiceChannelID != vcid && newMember.voiceChannelID == vcid) {
             // member joined the channel
-            newMember.addRole(newMember.guild.roles.get(rid));
+            newMember.roles.add(newMember.guild.roles.get(rid));
         } else if (oldMember.voiceChannelID == vcid && newMember.voiceChannelID != vcid) {
             // member left the channel
-            newMember.removeRole(newMember.guild.roles.get(rid));
+            newMember.roles.remove(newMember.guild.roles.get(rid));
         }
     });
 })();

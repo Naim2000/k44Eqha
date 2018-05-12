@@ -65,7 +65,7 @@ global.createMPPbridge = function (room, DiscordChannelID, site = 'MPP', webhook
 		msgBuffer = [];
 	}, 2000); //TODO make changeable
 	
-	const gClient = site == "MPP" ? new Client("ws://www.multiplayerpiano.com:443") : site == "WOPP" ? new Client("ws://ourworldofpixels.com:1234", true) : site == "MPT" ? new Client("ws://23.95.115.204:8080", true) : site == "VFDP" ? new Client("ws://www.visualfiredev.com:8080") : undefined;
+	const gClient = site == "MPP" ? new Client("ws://www.multiplayerpiano.com:443") : site == "WOPP" ? new Client("ws://ourworldofpixels.com:1234", true) : site == "MPT" ? new Client("ws://ts.terrium.net:8080", true) : site == "VFDP" ? new Client("ws://www.visualfiredev.com:8080") : undefined;
 	if (!gClient) return console.error(`Invalid site ${site}`);
 	gClient.setChannel(/*(site == "MPP" && room == "lobby") ? "lolwutsecretlobbybackdoor" : */room);
 	gClient.canConnect = true;
@@ -376,7 +376,7 @@ commands.bridge = {
 		else if ((existingBridge && existingBridge.disabled) || config.disabledRooms.includes(room)) return msg.reply(`You cannot bridge this room.`);
 		var discordChannelName = room.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
 		var categoryID = '360557444952227851';
-		var channel = await dClient.guilds.get(config.guildID).createChannel(discordChannelName, {parent: categoryID});
+		var channel = await dClient.guilds.get(config.guildID).channels.create(discordChannelName, {parent: categoryID});
 		channel.setTopic(`Bridged to http://www.multiplayerpiano.com/${encodeURIComponent(room)}`);
 		var webhook = await channel.createWebhook('Webhook');
 		createMPPbridge(room, channel.id, site, webhook.id, webhook.token);
@@ -465,7 +465,7 @@ commands.list = {
 		var names = [];
 		for (let person in ppl) {
 			person = ppl[person];
-			names.push(`\`${person._id.substr(0,4)}\` ${person.name}`);
+			names.push(`\`${person._id.substr(0,6)}\` ${person.name}`);
 		}
 		str += names.join(', ');
 		message.channel.send(str, {split:{char:''}});

@@ -41,7 +41,7 @@ global.commands = {
 			if (!msg.args[0]) return false;
 			//var name = msg.txt(1).replace(/[^a-zA-Z0-9]/g, '-').substr(0,100).toLowerCase();
 			var name = msg.txt(1);
-			msg.guild.createChannel(name, {
+			msg.guild.channels.create(name, {
 				parent: '399735134061985792',
 				overwrites: [
 					{
@@ -66,6 +66,7 @@ global.commands = {
 	'delete': {
 		usage: "[channel]",
 		aliases: ['archive'],
+		hidden: true,
 		description: "Archives a channel that you have permission to delete.",
 		exec: async function (msg) {
 			if (msg.args[1]) {
