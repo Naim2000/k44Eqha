@@ -379,7 +379,10 @@ commands.bridge = {
 				if (config.disabledRooms.includes(room)) {
 					return msg.reply(`You cannot bridge this room.`);
 				} else /* rebridge */ {
-					await dbClient.query("UPDATED BRIDGES SET disabled = false WHERE mpp_room = $1", [room]);
+					let channel = dClient.guilds.get(config.guildID).channels.get(existingBridge.discord_channel_id);
+					await dbClient.query("UPDATE bridges SET disabled = false WHERE mpp_room = $1", [room]);
+					await channel.setParent('360557444952227851');
+					await channel.lockPermissions();
 					createMPPbridge(room, existingBridge.mpp_room, existingBridge.site, existingBridge.webhook_id, existingBridge.webhook_token);
 					await msg.reply(`${site} room ${room} has been re-bridged.`);
 					return;
