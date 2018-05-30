@@ -150,13 +150,13 @@ global.createMPPbridge = function (room, DiscordChannelID, site = 'MPP', webhook
 		gClient.sendArray(arr);
 	});
 
-	/*// announce join/leave
-	gClient.on('participant added', participant => {
-		dSend(`**\`${participant._id.substr(0,4)}\` ${participant.name} entered the room.**`);
+	// announce join/leave
+	gClient.on('participant added', participant => {                      //TODO universal way of filtering names
+		dSend(`**\`${participant._id.substr(0,6)}\` ${participant.name.replace(/<@/g, "<\\@")} entered the room.**`);
 	});
 	gClient.on('participant removed', participant => {
-		dSend(`**\`${participant._id.substr(0,4)}\` ${participant.name} left the room.**`);
-	});*/ // too spammy
+		dSend(`**\`${participant._id.substr(0,6)}\` ${participant.name.replace(/<@/g, "<\\@")} left the room.**`);
+	});
 
 
 	/*// autoban banned participants
