@@ -172,9 +172,9 @@ dClient.on('message', message => {
 			(res) => {
 				if (res === false) message.channel.send(`**Usage:** \`!${commandName} ${command.usage}\``);
 			},
-			(rej) => {
-				message.reply(`:warning: An error has been encountered while processing your command.`);
-				console.error(rej.stack || rej);
+			(err) => {
+				message.reply(`:warning: An error occured: \`\`\`\n${err.stack}\n\`\`\``);
+				console.error(err.stack);
 			}
 		)
 	});
