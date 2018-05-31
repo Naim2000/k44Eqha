@@ -422,11 +422,11 @@ commands.unbridge = {
 			msg.reply(`You do not own that bridge.`);
 			return;
 		}
+		await dbClient.query("UPDATE bridges SET disabled = 'true' WHERE mpp_room = $1", [bridge.mpp_room]);
 		clients.MPP[bridge.mpp_room].stop();
 		var channel = dClient.channels.get(bridge.discord_channel_id)
-		await channel.setParent('425054341725159424');
+		await channel.setParent('451838300068511745');
 		await channel.lockPermissions();
-		await dbClient.query("UPDATE bridges SET disabled = 'true' WHERE mpp_room = $1", [bridge.mpp_room]);
 		msg.reply(`${bridge.mpp_room} has been unbridged.`);
 	}
 }
