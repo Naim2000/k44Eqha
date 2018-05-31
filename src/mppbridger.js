@@ -92,45 +92,35 @@ global.createMPPbridge = function (room, DiscordChannelID, site = 'MPP', webhook
 		console.log(`[${site}] [${room}] ${status}`);
 	});*/
 		
-	let lastCh = {_id:room};
-	gClient.on('ch', async msg => {
-		// on room change
-		if (msg.ch._id !== lastCh._id) {
-			dSend(`**Channel changed from \`${lastCh._id}\` to \`${msg.ch._id}\`**`);
-			console.log(`[${site}][${room}] Channel changed from ${lastCh._id} to ${msg.ch._id}`);
+	let lastCh = room;
+	gClient.on('ch', msg => {
+		if (lastCh && msg.ch._id !== lastCh) {
+			dSend(`**Channel changed from \`${lastCh}\` to \`${msg.ch._id}\`**`);
+			console.log(`[${site}][${room}] Channel changed from ${lastCh} to ${msg.ch._id}`);
+			lastCh = msg.ch._id;
 		}
-		
-		// join/leave messages
-		if (!msg.ch.p) {
-			for (let lp of lastCh.ppl) {
-				// thoncc
+		(async function(){
+			// catch dropped crown
+			if (msg.ch.crown && !msg.ch.crown.hasOwnProperty('participantId')) {
+				gClient.sendArray([{m:'chown', id: gClient.getOwnParticipant().id}]); // if possible
+				var avail_time = msg.ch.crown.time + 15000 - gClient.serverTimeOffset;
+				var ms = avail_time - Date.now();
+				setTimeout(()=> gClient.sendArray([{m:'chown', id: gClient.getOwnParticipant().id}]) , ms);
 			}
-		}
-		
-		// catch dropped crown
-		if (msg.ch.crown && !msg.ch.crown.hasOwnProperty('participantId')) {
-			gClient.sendArray([{m:'chown', id: gClient.getOwnParticipant().id}]); // if possible
-			var avail_time = msg.ch.crown.time + 15000 - gClient.serverTimeOffset;
-			var ms = avail_time - Date.now();
-			setTimeout(()=> gClient.sendArray([{m:'chown', id: gClient.getOwnParticipant().id}]) , ms);
-		}
-		
-		// transfer crown to owner
-		if (msg.ppl && msg.ch.crown && msg.ch.crown.participantId == gClient.getOwnParticipant().id) {
-			var res = await dbClient.query("SELECT owner_mpp__id FROM bridges WHERE mpp_room = $1 AND site = $2;", [room, site]);
-			if (res.rows.length == 0) return;
-			var owner = res.rows[0].owner_mpp__id;
-			if (!owner) return;
-			msg.ppl.some(part => {
-				if (part._id == owner) {
-					gClient.sendArray([{m:'chown', id: part.id}]);
-					return true;
-				} else return false;
-			});
-		}
-		
-		
-		lastCh = msg.ch;
+			// transfer crown to owner
+			if (msg.ppl && msg.ch.crown && msg.ch.crown.participantId == gClient.getOwnParticipant().id) {
+				var res = await dbClient.query("SELECT owner_mpp__id FROM bridges WHERE mpp_room = $1 AND site = $2;", [room, site]);
+				if (res.rows.length == 0) return;
+				var owner = res.rows[0].owner_mpp__id;
+				if (!owner) return;
+				msg.ppl.some(part => {
+					if (part._id == owner) {
+						gClient.sendArray([{m:'chown', id: part.id}]);
+						return true;
+					} else return false;
+				});
+			}
+		})();
 	});
 
 	// MPP to Discord
