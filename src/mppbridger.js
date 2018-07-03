@@ -191,6 +191,17 @@ global.createMPPbridge = function (room, DiscordChannelID, site = 'MPP', webhook
 		}
     });
     
+	gClient.on("ch", function(msg){
+		if (gClient.isOwner()) {
+			if (gClient.countParticipants() <= 1) {
+				gClient.sendArray([{m:'chset', set: { visible: false }}])	
+			} else {
+				gClient.sendArray([{m:'chset', set: { visible: true }}])	
+			}
+		}
+	});
+	
+	
     
     // addons
 	gClient.on('participant update', function(participant){
