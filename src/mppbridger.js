@@ -462,7 +462,7 @@ commands.chown = {
 				MANAGE_WEBHOOKS: true,
 				MANAGE_MESSAGES: true
 			});
-			let po = msg.channel.permissionOverwrites.find('id', msg.author.id);
+			let po = msg.channel.permissionOverwrites.find(x => x.id == msg.author.id);
 			if (po) po.delete();
 			await dbClient.query('UPDATE bridges SET owner_discord_user_id = $1 WHERE discord_channel_id = $2;', [selectedUser.id, msg.channel.id]);
 			msg.channel.send(`Ownership of ${msg.channel} has been transferred to ${selectedUser}`);
