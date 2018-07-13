@@ -4,7 +4,7 @@ module.exports = {
 	exec: async function (msg) {
 		var site = 'MPP';
 		var room = msg.txt(1);
-		if (!room) return false;
+		if (!room) return "EBADUSG";
 		var existingBridge = (await dbClient.query('SELECT * FROM bridges WHERE mpp_room = $1;', [room])).rows[0];
 		if (existingBridge) {
 			if (!existingBridge.disabled) {

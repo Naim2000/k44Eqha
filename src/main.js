@@ -1,3 +1,4 @@
+require('./util');
 global.exitHook = require('async-exit-hook');
 global.Discord = require('discord.js');
 global.fs = require('fs');

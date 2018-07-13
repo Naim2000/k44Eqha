@@ -183,7 +183,16 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 			}, minutes*60*1000+3000);
 			dSend(`**Attempting to rejoin in ${minutes} minutes.**`);
 		}
-    });
+	});
+	
+
+	// autoban perma-banned users
+	gClient.on("participant added", async part => {
+		var bridge = (await dbClient.query("SELECT bans FROM bridges WHERE discord_channel_id = $1", [DiscordChannelID])).rows[0];
+		for (let x of bridge.bans)
+			if (part._id.startsWith(x))
+				gClient.sendArray([{m: "kickban", _id: part._id, ms: 60*60*1000}]);
+	})
 	
 
 

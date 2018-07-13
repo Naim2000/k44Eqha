@@ -3,7 +3,7 @@ module.exports = {
 	description: "Changes the MPP or Discord owner of a private bridge. The first argument must be either `mpp` or `discord`.",
 	aliases: ['changeowner', 'setowner'],
 	exec: async function (msg) {
-		if (msg.args.length < 3 || !['mpp','discord'].includes(msg.args[1])) return false;
+		if (msg.args.length < 3 || !['mpp','discord'].includes(msg.args[1])) return "EBADUSG";
 		var res = await dbClient.query('SELECT * FROM bridges WHERE discord_channel_id = $1;', [msg.channel.id]);
 		if (res.rows.length == 0) return msg.react('🚫');
 		var bridge = res.rows[0];
