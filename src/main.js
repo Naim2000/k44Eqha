@@ -18,7 +18,7 @@ console.error = function(){
 console.warn = console.error;
 console.info = console.log;
 
-var webhook = new Discord.WebhookClient('405445543536623627', config.webhooks.console);
+var webhook = new Discord.WebhookClient(config.webhooks.console[0], config.webhooks.console[1]);
 function log2discord(str){
 	str = Array.from(str);
 	str = str.map(require('util').inspect);
