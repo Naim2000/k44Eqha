@@ -17,9 +17,10 @@ function mixin(obj1, obj2) {
 };
 
 
-function Client(uri) {
+function Client(uri, arrayBuffer) {
 	EventEmitter.call(this);
 	this.uri = uri;
+	this.arrayBuffer = arrayBuffer;
 	this.ws = undefined;
 	this.serverTimeOffset = 0;
 	this.user = undefined;
@@ -84,7 +85,7 @@ Client.prototype.connect = function() {
 		// browseroni
 		this.ws = new WebSocket(this.uri);
 	}
-	this.ws.binaryType = "arraybuffer";
+	if (this.arrayBuffer) this.ws.binaryType = "arraybuffer";
 	this.emit("ws created");
 	var self = this;
 	this.ws.addEventListener("close", function(evt) {

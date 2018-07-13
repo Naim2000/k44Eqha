@@ -1,4 +1,3 @@
-require('./util');
 global.exitHook = require('async-exit-hook');
 global.Discord = require('discord.js');
 global.fs = require('fs');
@@ -42,11 +41,11 @@ process.on('uncaughtException', error => {
 dClient.once('ready', () => {
 	console.log('Discord Client Ready');
 
-	require('./commands');
-		require('./colorroles');
-		require('./mppbridger');
-	require('./screenshotter');
-	require('./misc');
+	require('./commands.js');
+		require('./colorroles.js');
+		require('./mppbridger.js');
+	require('./screenshotter.js');
+	require('./misc.js');
 
 });
 dClient.on('error', console.error);
