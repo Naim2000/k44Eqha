@@ -22,6 +22,8 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 	if (!DiscordChannel) return console.error(`Couldn't bridge ${site} ${room} because Discord Channel ${DiscordChannelID} is missing!`);
 	if (webhookID && webhookToken) var webhook = new Discord.WebhookClient(webhookID, webhookToken, {disableEveryone:true});
 	
+
+	// discord message sending
 	var msgBuffer = [];
 	function _dSend(msg, embed) {
 		if (webhook && !config.testmode) {
@@ -44,6 +46,9 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 		msgBuffer = [];
 	}, 2000); //TODO make changeable
 	
+
+
+
 	const gClient = 
 		site == "MPP"  ? new Client("ws://www.multiplayerpiano.com:443") :
 		site == "WOPP" ? new Client("ws://ourworldofpixels.com:1234") :
@@ -56,6 +61,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 	clientConnector.enqueue(gClient);
 
 	
+
 	
 	var isConnected = false;
 	gClient.on('connect', () => {
@@ -76,8 +82,12 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 		console.log(`[${site}] [${room}] ${status}`);
 	});*/
 		
+
+
+
 	let lastCh = room;
 	gClient.on('ch', msg => {
+		// announce channel change
 		if (lastCh && msg.ch._id !== lastCh) {
 			dSend(`**Channel changed from \`${lastCh}\` to \`${msg.ch._id}\`**`);
 			console.log(`[${site}][${room}] Channel changed from ${lastCh} to ${msg.ch._id}`);
@@ -107,6 +117,9 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 		})();
 	});
 
+
+
+
 	// MPP to Discord
 	gClient.on('a', msg => {
 		if (msg.p._id == gClient.getOwnParticipant()._id) return;
@@ -134,8 +147,11 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 		gClient.sendArray(arr);
 	});
 
+
+
+
 	// announce join/leave
-	gClient.on('participant added', participant => {                      //TODO universal way of filtering names
+	gClient.on('participant added', participant => {
 		dSend(`**\`${participant._id.substr(0,6)}\` ${participant.name.replace(/<@/g, "<\\@")} entered the room.**`);
 	});
 	gClient.on('participant removed', participant => {
@@ -143,15 +159,16 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 	});
 
 
-	gClient.on('notification', async msg => {
 
+
+	gClient.on('notification', async msg => {
 		// show notification
 		_dSend(undefined, {
 			title: msg.title,
 			description: msg.text || msg.html
 		});
 
-		// ban handling
+		// handle bans
 		if (msg.text && (msg.text.startsWith('Banned from') || msg.text.startsWith('Currently banned from'))) {
             // Banned from "{room}" for {n} minutes.
             // Currently banned from "{room}" for {n} minutes.
@@ -167,7 +184,10 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 			dSend(`**Attempting to rejoin in ${minutes} minutes.**`);
 		}
     });
-    
+	
+
+
+	// make room invisible when nobody else is in it
 	gClient.on("ch", function(msg){
 		if (gClient.isOwner()) {
 			if (gClient.countParticipants() <= 1) {
@@ -182,9 +202,11 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
     
 	// addons
 	{
+		// collect names
 		gClient.on('participant update', function(participant){
 			require('./namecollector').collect(participant);
 		});
+		// record raw data
 		require('./datacollector')(gClient, site, room, DiscordChannel);
 	}
 
