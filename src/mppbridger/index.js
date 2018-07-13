@@ -3,27 +3,6 @@ global.clients = {};
 
 
 
-
-
-
-
-
-/*function reconnectClients() {
-	for (let site in clients) {
-		site = clients[site];
-		let i = 0;
-		for (let client in site) {
-			client = site[client];
-			if (client.reconnectTimeout) clearTimeout(client.reconnectTimeout);
-			client.reconnectTimeout = setTimeout(()=>{
-				client.connect();
-				client.reconnectTimeout = undefined;
-			}, i += 2000);
-		}
-	}
-} //TODO BETTAH*/
-
-
 global.clientConnector = {
 	queue: [],
 	enqueue: function(client) {
@@ -38,7 +17,7 @@ global.clientConnector = {
 
 
 
-global.createMPPbridge = function (room, DiscordChannelID, site = 'MPP', webhookID, webhookToken) {
+global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site = 'MPP', webhookID, webhookToken) {
 	var DiscordChannel = dClient.channels.get(DiscordChannelID);
 	if (!DiscordChannel) return console.error(`Couldn't bridge ${site} ${room} because Discord Channel ${DiscordChannelID} is missing!`);
 	if (webhookID && webhookToken) var webhook = new Discord.WebhookClient(webhookID, webhookToken, {disableEveryone:true});
@@ -159,13 +138,6 @@ global.createMPPbridge = function (room, DiscordChannelID, site = 'MPP', webhook
 	});
 
 
-	/*// autoban banned participants
-	gClient.on('participant added', part => {
-		if (PS.banned_ppl.hasOwnProperty(part._id) && gClient.isOwner())
-			gClient.sendArray([{m: "kickban", _id: part._id, ms: 60*60*1000}]);
-	});*/
-
-
 	gClient.on('notification', async msg => {
 
 		// show notification
@@ -203,67 +175,16 @@ global.createMPPbridge = function (room, DiscordChannelID, site = 'MPP', webhook
 	
 	
     
-    // addons
-	gClient.on('participant update', function(participant){
-		nameCollector.collect(participant);
-	});
-	//if (site == 'MPP' && room == 'lobby') MPPrecorder.start(gClient);//TODO too much memory
-
-	// collect data
-	(async function(){
-		var filename = `${site} ${room} .txt`.replace(/\//g, ':');
-		var size = 0;
-		var startDate = new Date();
-		gClient.on('ws created', function(){
-			gClient.ws.addEventListener('message', msg => {
-				var data = msg.data;
-				if (data instanceof ArrayBuffer) data = Buffer.from(data).toString('base64');
-				var line = `${Date.now()} ${data}\n`;
-				size += line.length;
-				fs.appendFile(filename, line, ()=>{});
-				if (size > 8000000) {save(); size = 0;}
-			});
+	// addons
+	{
+		gClient.on('participant update', function(participant){
+			require('./namecollector').collect(participant);
 		});
-		async function save(callback){
-			console.log(`saving data recording`, filename)
-			fs.readFile(filename, (err, file) => {
-				if (err) return console.error(err);
-				require('zlib').gzip(file, async function(err, gzip){
-					if (err) return console.error(err);
-					var attachmentName = `${site} ${room} raw data recording from ${startDate.toISOString()} to ${new Date().toISOString()} .txt.gz`;
-					await DiscordChannel.send(new Discord.MessageAttachment(gzip, attachmentName));
-					fs.writeFileSync(filename, '');
-					size = 0;
-					startDate = new Date();
-					console.log(`saved raw data recording`, attachmentName);
-					if (callback) callback();
-				});
-			});
-		}
-		exitHook(callback => {
-			save(()=>callback());
-		});
-		gClient.dataCollectorSave = function(){save()}; // test
-	})();
+		require('./datacollector')(gClient, site, room, DiscordChannel);
+	}
 
 	if (!clients[site]) clients[site] = {};
 	clients[site][room] = gClient;
-
-
-
-	/*// EXPERIMENTAL
-	gClient.on('ls', msg => {
-		msg.u.forEach(async r => {
-			if (clients[site][r._id]) return;
-			for (let client of clientConnector.queue) {if (client.desiredChannelId == r._id) return} // ugg
-			var discordChannelName = r._id.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
-			var categoryID = '409079939501916160';
-			var channel = await dClient.guilds.get(config.guildID).createChannel(discordChannelName, {parent: categoryID});
-			channel.setTopic(`Bridged to http://www.multiplayerpiano.com/${encodeURIComponent(r._id)}`);
-			var webhook = await channel.createWebhook('Webhook');
-			createMPPbridge(r._id, channel.id, site, webhook.id, webhook.token);
-		})
-	})*/
 }
 
 
@@ -275,67 +196,6 @@ global.createMPPbridge = function (room, DiscordChannelID, site = 'MPP', webhook
 
 
 
-
-global.nameCollector = {
-	collection: mdbClient.db('heroku_jrtfvpd9').collection('ppl'),
-	collect: async function (participant) {
-		if (config.testmode) return;
-		if (participant.name == "Anonymous" || participant.name == "Anonymoose") return;
-
-		var newMsg = function(continued){
-			var str = `__**${participant._id}**__${continued ? ' (continued)' : ''}\n${participant.name}`;
-			return dClient.channels.get('379738469511069698').send(str);
-		}
-
-		var document = await this.collection.findOne({_id: participant._id});
-		
-		if (document) {
-			// update person
-			if (document.names.includes(participant.name)) return;
-			document.names.push(participant.name);
-			this.collection.updateOne({_id: participant._id}, {$set:{names: document.names}});
-
-			let message = await dClient.channels.get('379738469511069698').messages.fetch(document.discord_msg_id);
-			try {
-				await message.edit(message.content + ', ' + participant.name);
-			} catch(e) {
-				let message = await newMsg(true);
-				this.collection.updateOne({_id: participant._id}, {$set:{discord_msg_id: message.id}});
-			}
-		} else {
-			// add new person
-			let message = await newMsg();
-			nameCollector.collection.insertOne({
-				_id: participant._id,
-				discord_msg_id: message.id,
-				names: [participant.name]
-			});
-		}
-	}
-};
-
-
-
-global.MPPrecorder = {
-	start: function(client) {
-		var recorder = (require('./lib/mpprecorder-module.js'))(undefined, client);
-		this.save = async function () {
-			var startDate = new Date(recorder.startTime), endDate = new Date();
-			var filename = `www.multiplayerpiano.com lobby recording from ${startDate.toISOString()} to ${endDate.toISOString()} .mid.gz`;
-			var file = recorder.save();
-			file = Buffer.from(file, 'binary');
-			file = require('zlib').gzipSync(file);
-			var attachment = new Discord.MessageAttachment(file, filename);
-			await dClient.channels.get('394967426133000193').send(attachment);
-		}
-		this.interval = setInterval(() => {
-			this.save();
-		}, 10*60*1000);
-		exitHook(callback => {
-			this.save().then(callback);
-		});
-	}
-};
 
 
 
@@ -366,6 +226,19 @@ global.MPPrecorder = {
 		});
 	}
 })();
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -413,6 +286,10 @@ commands.bridge = {
 		msg.reply(`${site} room ${room} is now bridged to ${channel}.`);
 	}
 };
+
+
+
+
 
 commands.unbridge = {
 	usage: "[MPP Room]",
