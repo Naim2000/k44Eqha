@@ -1,4 +1,4 @@
-var Client = require('./lib/Client.js');
+var Client = require('../lib/Client.js');
 global.clients = {};
 
 
