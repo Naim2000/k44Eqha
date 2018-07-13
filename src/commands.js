@@ -38,7 +38,7 @@ global.commands = {
 		usage: "<name>",
 		description: "Creates a generic text channel in this server and gives you full permissions for it.",
 		exec: async function (msg) {
-			if (!msg.args[0]) return false;
+			if (!msg.args[0]) return "EBADUSG";
 			//var name = msg.txt(1).replace(/[^a-zA-Z0-9]/g, '-').substr(0,100).toLowerCase();
 			var name = msg.txt(1);
 			msg.guild.channels.create(name, {
@@ -106,6 +106,24 @@ global.commands = {
 			}
 		}
 	},
+
+	"exec": {
+		op: true,
+		usage: "<command>",
+		aliases: ["$"],
+		exec: async function (msg) {
+			require("child_process").exec(msg.txt(1), function(error, stdout, stderr){
+				if (error) msg.channel.send(error, {split:{char:''}});
+				else {
+					var str = ""
+					if (stdout) msg.channel.send(stdout, {split:{char:''}});
+					if (stderr) msg.channel.send(stderr, {split:{char:''}});
+				}
+			})
+		}
+
+	},
+
 	"query": {
 		description: "Queries the Heroku PostgreSQL database",
 		usage: "<query>",
@@ -145,35 +163,29 @@ dClient.on('message', message => {
 	if (!message.guild) message.guild = dClient.guilds.get(config.guildID);
 	if (!message.member) message.member = dClient.guilds.get(config.guildID).members.get(message.author.id);
 	
-	/*if (commands.hasOwnProperty(cmd)) {
-		var command = commands[cmd];
-		if (command.op && message.author.id !== op) return message.react('🚫');
-		try {
-			command.exec(message, args, txt);
-		} catch(e) {
-			message.reply(`:warning: An error occured while processing your command.`);
-			console.error(e.stack);
-		}
-	}*/
-	
 	Object.keys(commands).forEach(commandName => {
 		var command = commands[commandName];
 		if (!(commandName === cmd || (command.aliases && command.aliases.includes(cmd)))) return;
 		if (command.op && message.author.id !== config.opID) return message.react('🚫');
-		/*try {
-			var d = command.exec(message, args, txt);
-			if (d === false) message.channel.send(`**Usage:** \`!${commandName} ${command.usage}\``);
-		} catch(e) {
-			message.reply(`:warning: An error occured while processing your command.`);
-			console.error(e.stack);
-		}*/
-
 		command.exec(message, args, txt).then(
 			(res) => {
-				if (res === false) message.channel.send(`**Usage:** \`!${commandName} ${command.usage}\``);
+				switch (res) {
+					case "ENOTBRIDGE":
+						message.channel.send([
+							`This is not a bridged channel.`,
+							`You can only use this command in a bridged channel.`
+						].random());
+						break;
+					case "EBADUSG":
+						message.channel.send(`**Usage:** \`!${commandName} ${command.usage}\``);
+						break;
+				}
 			},
 			(err) => {
-				message.reply(`:warning: An error occured: \`\`\`\n${err.stack}\n\`\`\``);
+				message.reply(`:warning: An error occured: \`\`\`\n${err.stack}\n\`\`\`<@281134216115257344> ${[
+					'fix me pls',
+					// ran out of ideas
+				].random()}`);
 				console.error(err.stack);
 			}
 		)
