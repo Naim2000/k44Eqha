@@ -44,7 +44,12 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 		msgBuffer = [];
 	}, 2000); //TODO make changeable
 	
-	const gClient = site == "MPP" ? new Client("ws://www.multiplayerpiano.com:443") : site == "WOPP" ? new Client("ws://ourworldofpixels.com:1234", true) : site == "MPT" ? new Client("ws://ts.terrium.net:8080", true) : site == "VFDP" ? new Client("ws://www.visualfiredev.com:8080") : undefined;
+	const gClient = 
+		site == "MPP"  ? new Client("ws://www.multiplayerpiano.com:443") :
+		site == "WOPP" ? new Client("ws://ourworldofpixels.com:1234") :
+		site == "MPT"  ? new Client("ws://ts.terrium.net:8080") :
+		site == "VFDP" ? new Client("ws://www.visualfiredev.com:8080") :
+		undefined;
 	if (!gClient) return console.error(`Invalid site ${site}`);
 	gClient.setChannel(/*(site == "MPP" && room == "lobby") ? "lolwutsecretlobbybackdoor" : */room);
 	gClient.canConnect = true;
