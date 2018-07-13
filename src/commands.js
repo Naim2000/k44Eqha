@@ -106,6 +106,24 @@ global.commands = {
 			}
 		}
 	},
+
+	"exec": {
+		op: true,
+		usage: "<command>",
+		aliases: ["$"],
+		exec: async function (msg) {
+			require("child_process").exec(msg.txt(1), function(error, stdout, stderr){
+				if (error) msg.channel.send(error, {split:{char:''}});
+				else {
+					var str = ""
+					if (stdout) msg.channel.send(stdout, {split:{char:''}});
+					if (stderr) msg.channel.send(stderr, {split:{char:''}});
+				}
+			})
+		}
+
+	},
+
 	"query": {
 		description: "Queries the Heroku PostgreSQL database",
 		usage: "<query>",
