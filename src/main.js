@@ -42,11 +42,11 @@ process.on('uncaughtException', error => {
 dClient.once('ready', () => {
 	console.log('Discord Client Ready');
 
-	require('./commands.js');
-		require('./colorroles.js');
-		require('./mppbridger.js');
-	require('./screenshotter.js');
-	require('./misc.js');
+	require('./commands');
+		require('./colorroles');
+		require('./mppbridger');
+	require('./screenshotter');
+	require('./misc');
 
 });
 dClient.on('error', console.error);
