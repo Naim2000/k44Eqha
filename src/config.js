@@ -1,6 +1,6 @@
 module.exports = {
 
-    "testmode": new Boolean(process.env.TEST),
+    "testmode": process.env.TEST ? true : false,
     
     "DISCORD_TOKEN": process.env.DISCORD_TOKEN,
     "DATABASE_URL": this.testmode ? "postgres://localhost/k4t" : process.env.DATABASE_URL,
