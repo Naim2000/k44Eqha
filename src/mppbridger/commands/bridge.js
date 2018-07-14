@@ -15,7 +15,7 @@ module.exports = {
 				} else /* rebridge */ {
 					let channel = dClient.guilds.get(config.guildID).channels.get(existingBridge.discord_channel_id);
 					await dbClient.query("UPDATE bridges SET disabled = false WHERE mpp_room = $1", [room]);
-					await channel.setParent('360557444952227851');
+					await channel.setParent();
 					await channel.lockPermissions();
 					createMPPbridge(room, existingBridge.mpp_room, existingBridge.site, existingBridge.webhook_id, existingBridge.webhook_token);
 					await msg.reply(`${site} room ${room} has been re-bridged.`);
@@ -25,7 +25,7 @@ module.exports = {
 		}
 		/* new bridge */
 		var discordChannelName = room.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
-		var categoryID = '360557444952227851';
+		var categoryID = config.channels.mpp_bridges;
 		var channel = await dClient.guilds.get(config.guildID).channels.create(discordChannelName, {parent: categoryID});
 		channel.setTopic(`http://www.multiplayerpiano.com/${encodeURIComponent(room)}`);
 		var webhook = await channel.createWebhook('Webhook');

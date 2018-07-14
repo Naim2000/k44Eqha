@@ -14,8 +14,8 @@
 
 // view deleted channels
 (async function(){
-    var vcid = '425060452129701889';
-    var rid = '425060792455397376';
+    var vcid = config.channels.voice;
+    var rid = config.roles.viewing_deleted_channels;
     dClient.on('voiceStateUpdate', async (oldMember, newMember) => {
         if (oldMember.voiceChannelID != vcid && newMember.voiceChannelID == vcid) {
             // member joined the channel

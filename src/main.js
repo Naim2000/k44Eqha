@@ -14,9 +14,9 @@ process.on('uncaughtException', error => {
 });
 
 
-(require('mongodb').MongoClient).connect(process.env.MONGODB_URI).then(client=>{
+(require('mongodb').MongoClient).connect(config.MONGODB_URI).then(client=>{
 	global.mdbClient = client;
-	dClient.login(config.token);
+	dClient.login(config.DISCORD_TOKEN);
 });
 
 dClient.once('ready', () => {

@@ -7,7 +7,6 @@ global.colorRoles = { // TODO clean up this, adsfhaiusdhgaisuhg
             name:"[]",
             permissions:[],
             color:"RANDOM",
-            //position: member.guild.roles.get('346754988023873546').position
         }});
         return role;
     },

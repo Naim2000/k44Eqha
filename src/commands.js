@@ -42,7 +42,7 @@ global.commands = {
 			//var name = msg.txt(1).replace(/[^a-zA-Z0-9]/g, '-').substr(0,100).toLowerCase();
 			var name = msg.txt(1);
 			msg.guild.channels.create(name, {
-				parent: '399735134061985792',
+				parent: config.channels.user_channels,
 				overwrites: [
 					{
 						id: msg,
@@ -79,7 +79,7 @@ global.commands = {
 				var channel = msg.channel;
 			}
 			if (!channel.permissionsFor(msg.member).has('MANAGE_CHANNELS')) return msg.react('🚫');
-			await channel.setParent('425054198699261953');
+			await channel.setParent(config.channels.deleted_channels);
 			await channel.lockPermissions();
 			msg.react('🆗');
 		}
