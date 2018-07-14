@@ -1,5 +1,5 @@
-process.on('unhandledRejection', (reason, promise) => {
-	console.error(promise);
+process.on('unhandledRejection', error => {
+	console.error(error.stack);
 });
 process.on('uncaughtException', error => {
 	console.error(error.stack);
