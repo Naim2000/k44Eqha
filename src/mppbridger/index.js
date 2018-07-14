@@ -280,3 +280,4 @@ commands.bridge = require('./commands/bridge');
 commands.unbridge = require('./commands/unbridge');
 commands.chown = require('./commands/chown');
 commands.list = require('./commands/list');
+commands.ban = require('./commands/ban');
