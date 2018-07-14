@@ -1,4 +1,4 @@
-module.exports = {
+var nameCollector = module.exports = {
 	collection: mdbClient.db('heroku_jrtfvpd9').collection('ppl'),
 	collect: async function (participant) {
 		if (config.testmode) return;
