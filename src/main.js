@@ -6,10 +6,15 @@ global.Discord = require('discord.js');
 global.fs = require('fs');
 global.dClient = new Discord.Client({ disableEveryone: true });
 
-
-(require('mongodb').MongoClient).connect(config.MONGODB_URI).then(client=>{
-	global.mdbClient = client;
-	dClient.login(config.DISCORD_TOKEN);
+global.dbClient = new (require('pg').Client)({
+	connectionString: process.env.DATABASE_URL,
+	ssl: !config.testmode,
+});
+dbClient.connect().then(function(){
+	(require('mongodb').MongoClient).connect(config.MONGODB_URI).then(client=>{
+		global.mdbClient = client;
+		dClient.login(config.DISCORD_TOKEN);
+	});
 });
 
 dClient.once('ready', () => {
