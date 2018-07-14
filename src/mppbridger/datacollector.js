@@ -1,5 +1,7 @@
 module.exports = async function(gClient, site, room, DiscordChannel) {
+    var path = require('os').tmpdir();
     var filename = `${site} ${room} .txt`.replace(/\//g, ':');
+    var filepath = path + "/" + filename;
     var size = 0;
     var startDate = new Date();
     gClient.on('ws created', function(){
@@ -8,19 +10,19 @@ module.exports = async function(gClient, site, room, DiscordChannel) {
             if (data instanceof ArrayBuffer) data = Buffer.from(data).toString('base64');
             var line = `${Date.now()} ${data}\n`;
             size += line.length;
-            fs.appendFile(filename, line, ()=>{});
+            fs.appendFile(filepath, line, ()=>{});
             if (size > 8000000) {save(); size = 0;}
         });
     });
     async function save(callback){
         console.log(`saving data recording`, filename)
-        fs.readFile(filename, (err, file) => {
+        fs.readFile(filepath, (err, file) => {
             if (err) return console.error(err);
             require('zlib').gzip(file, async function(err, gzip){
                 if (err) return console.error(err);
                 var attachmentName = `${site} ${room} raw data recording from ${startDate.toISOString()} to ${new Date().toISOString()} .txt.gz`;
                 await DiscordChannel.send(new Discord.MessageAttachment(gzip, attachmentName));
-                fs.writeFileSync(filename, '');
+                fs.writeFileSync(filepath, '');
                 size = 0;
                 startDate = new Date();
                 console.log(`saved raw data recording`, attachmentName);
