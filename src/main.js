@@ -1,17 +1,10 @@
 require('./util');
+global.config = require('./config');
+if (config.testmode) console.log('TEST MODE');
 global.exitHook = require('async-exit-hook');
 global.Discord = require('discord.js');
 global.fs = require('fs');
-global.config = require('./config');
 global.dClient = new Discord.Client({ disableEveryone: true });
-
-
-process.on('unhandledRejection', (reason, promise) => {
-	console.error(promise);
-});
-process.on('uncaughtException', error => {
-	console.error(error.stack);
-});
 
 
 (require('mongodb').MongoClient).connect(config.MONGODB_URI).then(client=>{
