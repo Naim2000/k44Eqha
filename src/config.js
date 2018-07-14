@@ -16,13 +16,13 @@ module.exports = {
     "channels": { // includes voice channels & category channels
         "main": this.testmode ? "467473467634089987" : "321819041348190249",
         "voice": this.testmode ? "467473467634089989" : "425060452129701889",
-        "name_collection": this.testmode ? "" : '379738469511069698',
-        "mpp_bridges": this.testmode ? "" : '360557444952227851',
-        "user_channels": this.testmode ? "" : '399735134061985792',
-        "deleted_channels": this.testmode ? "" : '425054198699261953',
-        "deleted_bridges": this.testmode ? "" : '451838300068511745',
-        "mpp_screenshot": this.testmode ? "" : '383773548810076163',
-        "owop_screenshot": this.testmode ? "" : '399079481161023492'
+        "name_collection": this.testmode ? "467481952728121345" : '379738469511069698',
+        "mpp_bridges": this.testmode ? "467481904707534850" : '360557444952227851',
+        "user_channels": this.testmode ? "467482031157149709" : '399735134061985792',
+        "deleted_channels": this.testmode ? "467482085657935872" : '425054198699261953',
+        "deleted_bridges": this.testmode ? "467482121657778176" : '451838300068511745',
+        "mpp_screenshot": this.testmode ? "467482164611514388" : '383773548810076163',
+        "owop_screenshot": this.testmode ? "467482202217906226" : '399079481161023492'
     },
 
     "roles": {
