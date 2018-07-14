@@ -221,7 +221,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 
 	if (!clients[site]) clients[site] = {};
 	clients[site][room] = gClient;
-}
+};
 
 
 
