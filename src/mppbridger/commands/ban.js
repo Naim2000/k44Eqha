@@ -9,7 +9,7 @@ module.exports = {
         var bridge = res.rows[0];
         if (bridge.owner_discord_user_id != msg.author.id) return msg.reply(`You are not the owner of this bridge.`);
         var _id = msg.txt(1);
-        await dbClient.query("UPDATE bridges SET bans = bans || $1 WHERE discord_channel_id = $2", [_id, msg.channel.id]);
+        await dbClient.query("UPDATE bridges SET bans = array_append(bans, $1) WHERE discord_channel_id = $2", [_id, msg.channel.id]);
         await msg.reply(`OK, I'll ban anyone whose user ID equals or starts with \`${_id}\` from this room, whenever possible.`);
 
         var client = clients.MPP[bridge.mpp_room]
