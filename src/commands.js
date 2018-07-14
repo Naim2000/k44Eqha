@@ -182,10 +182,7 @@ dClient.on('message', message => {
 				}
 			},
 			(err) => {
-				message.reply(`:warning: An error occured: \`\`\`\n${err.stack}\n\`\`\`<@281134216115257344> ${[
-					'fix me pls',
-					// ran out of ideas
-				].random()}`);
+				message.reply(`:warning: An error occured: \`\`\`\n${err.stack}\n\`\`\`<@281134216115257344>`);
 				console.error(err.stack);
 			}
 		)
