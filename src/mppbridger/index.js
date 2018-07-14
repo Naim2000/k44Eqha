@@ -67,8 +67,10 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 	gClient.on('connect', () => {
 		console.log(`Connected to room ${room} of ${site} server`);
 		dSend(`**Connected**`); // TODO say what room it actually connected to ?
-		gClient.sendArray([{m: "userset", set: {name: config.mppname}}])
 		isConnected = true;
+	});
+	gClient.on('hi', ()=>{
+		if (!testmode) gClient.sendArray([{m: "userset", set: {name: config.mppname}}])
 	});
 	gClient.on('disconnect', () => {
 		if (isConnected) {
