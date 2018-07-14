@@ -10,9 +10,12 @@ global.dbClient = new (require('pg').Client)({
 	connectionString: process.env.DATABASE_URL,
 	ssl: !testmode,
 });
+console.log("Connecting to Postgres…")
 dbClient.connect().then(function(){
+	console.log("Connecting to MongoDB…")
 	(require('mongodb').MongoClient).connect(config.MONGODB_URI).then(client=>{
 		global.mdbClient = client;
+		console.log("Connecting to Discord…")
 		dClient.login(config.DISCORD_TOKEN);
 	});
 });
