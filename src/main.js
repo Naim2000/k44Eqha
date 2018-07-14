@@ -8,7 +8,7 @@ global.dClient = new Discord.Client({ disableEveryone: true });
 
 global.dbClient = new (require('pg').Client)({
 	connectionString: process.env.DATABASE_URL,
-	ssl: !config.testmode,
+	ssl: !testmode,
 });
 dbClient.connect().then(function(){
 	(require('mongodb').MongoClient).connect(config.MONGODB_URI).then(client=>{
