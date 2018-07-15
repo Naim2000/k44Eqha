@@ -1,2 +1,5 @@
 /local/
 node_modules/
+.DS_Store
+test.sh
+.vscode
