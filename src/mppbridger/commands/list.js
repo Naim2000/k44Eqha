@@ -8,6 +8,11 @@ module.exports = {
 			message.reply(`Use this in a bridged room to see who is at the other side.`);
 			return;
 		}
+		var client = clients[row.site][row.mpp_room];
+		if (!client || !client.isConnected()) {
+			message.reply(`This bridge is not connected.`);
+			return;
+		}
 		var ppl = clients[row.site][row.mpp_room].ppl;
 		
 		var numberOfPpl = Object.keys(ppl).length;
