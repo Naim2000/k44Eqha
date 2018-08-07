@@ -154,10 +154,10 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 
 	// announce join/leave
 	gClient.on('participant added', participant => {
-		dSend(`**\`${participant._id.substr(0,6)}\` ${participant.name.replace(/<@/g, "<\\@")} entered the room.**`);
+		dSend(`\`${participant._id.substr(0,6)}\` ___**${participant.name.replace(/<@/g, "<\\@")}** entered the room.___`);
 	});
 	gClient.on('participant removed', participant => {
-		dSend(`**\`${participant._id.substr(0,6)}\` ${participant.name.replace(/<@/g, "<\\@")} left the room.**`);
+		dSend(`\`${participant._id.substr(0,6)}\` ___**${participant.name.replace(/<@/g, "<\\@")}** left the room.___`);
 	});
 
 
