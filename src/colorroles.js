@@ -94,6 +94,15 @@ commands.color = {
         var str = message.txt(1);
         if (!str) return false;
         var role = colorRoles.get(message.member);
+        if (!role) {
+            if (message.author.presence.status == "invisible")
+               message.reply([
+					"You are invisible.",
+					"I can't change your color when you're invisible.",
+					"How can I change your color if I can't see you?",
+               ].random());
+            else await colorRoles.ensure(message.member); 
+        }
         role.setColor(str.toUpperCase());
         message.react("🆗");
     }
@@ -102,7 +111,7 @@ commands.color = {
 commands.title = {
     aliases: ["tit"],
     usage: "<title>",
-    description: "Sets your title (the name of your personal role).\nUse “none” to clear your title.",
+    description: "Sets your title (the name of your color role).\nUse “none” to clear your title.",
     exec: async function (message) {
         var str = message.txt(1);
         if (!str) return false;
