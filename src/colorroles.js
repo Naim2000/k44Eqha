@@ -1,31 +1,13 @@
+global.colorRoles = new Object();
 
 
-global.colorRoles = { // TODO clean up this, adsfhaiusdhgaisuhg
-
-    create: async function (guild){ // create new color role
-        var role = await guild.roles.create({data:{
-            name:"[]",
-            permissions:[],
-            color:"RANDOM",
-        }});
-        return role;
-    },
-
-    get: function (member){ // get color role of member
-        return member.roles.find(role => {if (role.name.startsWith('[')) return role});
-    },
-
-    ensure: async function (member) { // restore or create role for member if they don't have one
-        if (this.get(member)) return;
-        if (await this.restore(member)) return;
-        var role = await this.create(member.guild);
-        await member.roles.add(role);
-    },
-
-    pack: async function (member) { // store member color role in database and delete
-        var role = this.get(member);
-        if (!role) return;
-        var json = {
+colorRoles.update = async function (member) { // updates a member's color role as needed
+    let existingColorRole = member.roles.find(role => role.name.startsWith('['));
+    if (member.user.presence.status == "offline") { // they must not have the role
+        if (!existingColorRole) return; // ok, they already don't have the role
+        // save and delete their color role
+        let role = existingColorRole;
+        let dbrole = {
             id: role.id,
             name: role.name,
             color: role.color,
@@ -33,58 +15,80 @@ global.colorRoles = { // TODO clean up this, adsfhaiusdhgaisuhg
             position: role.position,
             permissions: role.permissions.bitfield,
             mentionable: role.mentionable
-        }
-        var id = member.id;
-        var res = await dbClient.query(`SELECT * FROM member_data WHERE id = $1`, [id]);
+        };
+        let id = member.id;
+        // upsert member's color_role json
+        let res = await dbClient.query(`SELECT * FROM member_data WHERE id = $1`, [id]);
         if (res.rows[0]) {
-            await dbClient.query(`UPDATE member_data SET color_role = $2 WHERE id = $1`, [id, json]);
+            await dbClient.query(`UPDATE member_data SET color_role = $2 WHERE id = $1`, [id, dbrole]);
         } else {
-            await dbClient.query(`INSERT INTO member_data (id, color_role) VALUES ($1, $2)`, [id, json]);
-        } // need better sql, oof
-        role.delete();
-    },
+            await dbClient.query(`INSERT INTO member_data (id, color_role) VALUES ($1, $2)`, [id, dbrole]);
+        }
+        await role.delete();
+    } else { // they must have their color role
+        if (existingColorRole) return; // ok, they already have the role
+        // give them their color role
+        // check if database has their role
+        let dbrole = (await dbClient.query(`SELECT (color_role) FROM member_data WHERE id = $1`, [member.id])).rows[0];
+        dbrole = dbrole.color_role;
+        if (dbrole) { // it does, reinstantiate it
+            let role = member.guild.roles.get(dbrole.id); // get existing role if it still exists somehow
+            if (!role) role = await member.guild.roles.create({data:{ // otherwise recreate it
+                name: dbrole.name,
+                color: dbrole.color,
+                hoist: dbrole.hoist,
+                //position: dbrole.position,
+                permissions: dbrole.permissions,
+                mentionable: dbrole.mentionable
+            }});
+            await member.roles.add(role);
+        } else { // it doesn't, create a new one
+            let role = await member.guild.roles.create({data:{
+                name: "[]",
+                permissions:[],
+                color:"RANDOM",
+            }});
+            await member.roles.add(role);
+        }
+        
+    }
+    
+};
 
-    restore: async function (member) { // load color role from database and reapply to member
-        var json = (await dbClient.query(`SELECT (color_role) FROM member_data WHERE id = $1`, [member.id])).rows[0];
-        if (!json) return false;
-        else json = json.color_role;
-        var role = member.guild.roles.get(json.id);
-        if (!role) role = await member.guild.roles.create({data:{
-            name: json.name,
-            color: json.color,
-            hoist: json.hoist,
-            //position: json.position,
-            permissions: json.permissions,
-            mentionable: json.mentionable
-        }});
-        member.roles.add(role);
-        return true;
-    },
+colorRoles.updateAll = async function() { // update all members' color roles
+    var guild = dClient.defaultGuild || dClient.guilds.get(config.guildID);
+    await guild.members.fetch(); // load all members
+    for (let member of guild.members)
+        await colorRoles.update(member);
+}
 
-
-
-
+colorRoles.pruneOrphanRoles = async function() { // delete all color roles that have no member
+    for (let role of guild.roles) 
+        if (role.name.startsWith('[') && role.members.length == 0)
+            await role.delete();
 }
 
 
 
 
 
+// event listeners
 
-
-dClient.on('presenceUpdate', (oldMember, newMember) => {
+dClient.on('presenceUpdate', (oldMember, newMember) => { // update color role on presence update // emitted also on member join
     if (newMember.guild.id != config.guildID) return;
     if (oldMember.presence.status != newMember.presence.status) {
-        if (newMember.presence.status == "offline") {
-            colorRoles.pack(newMember);
-        } else {
-            colorRoles.ensure(newMember);
-        }
+        colorRoles.update(newMember);
     }
 });
-dClient.on('guildMemberRemove', member => {
-    colorRoles.pack(member);
+dClient.on('guildMemberRemove', member => { // update (delete) color role on member leave
+    colorRoles.update(member);
 });
+
+
+
+
+
+// commands
 
 commands.color = {
     aliases: ["col"],

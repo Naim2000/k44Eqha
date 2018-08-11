@@ -22,6 +22,7 @@ dbClient.connect().then(function(){
 
 dClient.once('ready', () => {
 	console.log('Discord Client Ready');
+	dClient.defaultGuild = dClient.guilds.get(config.guildID);
 
 	require('./commands');
 		require('./colorroles');
