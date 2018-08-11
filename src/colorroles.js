@@ -1,9 +1,12 @@
 global.colorRoles = new Object();
 
+colorRoles.findColorRole = function (member) { // get color role of member
+    return member.roles.find(role => role.name.startsWith('['));
+};
 
 colorRoles.update = async function (member) { // create or remove member's color role based on presence
     if (member.guild.id != config.guildID) return;
-    let existingColorRole = member.roles.find(role => role.name.startsWith('['));
+    let existingColorRole = colorRoles.findColorRole(member);
     if (member.presence.status == "offline") { // they must not have the role
         if (!existingColorRole) return; // ok, they already don't have the role
         // save and delete their color role
@@ -46,14 +49,12 @@ colorRoles.update = async function (member) { // create or remove member's color
         } else { // it doesn't, create a new one
             let role = await member.guild.roles.create({data:{
                 name: "[]",
-                permissions:[],
-                color:"RANDOM",
+                permissions: [],
+                color: "RANDOM",
             }});
             await member.roles.add(role);
-        }
-        
+        }   
     }
-    
 };
 
 colorRoles.updateAll = async function() { // update all members' color roles
@@ -63,11 +64,11 @@ colorRoles.updateAll = async function() { // update all members' color roles
         member = member[1];
         try {
             await colorRoles.update(member);
-        } catch(e) {
+        } catch(e) {  //TODO debug
             console.error(e.stack);
         }
     }
-}
+};
 
 colorRoles.pruneOrphanRoles = async function() { // delete all color roles that have no member
     var guild = dClient.defaultGuild || dClient.guilds.get(config.guildID);
@@ -76,7 +77,7 @@ colorRoles.pruneOrphanRoles = async function() { // delete all color roles that 
         if (role.name.startsWith('[') && role.members.length == 0)
             await role.delete();
     }
-}
+};
 
 
 
@@ -85,6 +86,7 @@ colorRoles.pruneOrphanRoles = async function() { // delete all color roles that 
 // event listeners
 
 dClient.on('presenceUpdate', async (oldMember, newMember) => { // update color role on presence update // emitted also on member join
+    if (!oldMember || !newMember) return; //TODO debug
     if (!oldMember.presence || !newMember.presence) return;
     if (oldMember.presence.status != newMember.presence.status) {
         await colorRoles.update(newMember);
@@ -107,14 +109,17 @@ commands.color = {
     exec: async function (message) {
         var str = message.txt(1);
         if (!str) return false;
-        var role = message.member.roles.find(role => role.name.startsWith('['));
+        var role = colorRoles.findColorRole(message.member);
         if (!role) {
-            if (message.author.presence.status == "offline")
+            if (message.member.presence.status == "offline")
                return message.reply([
                     "You are offline.",
 					"I can't change your color when you're invisible."
                ].random());
-            else await colorRoles.update(message.member); 
+            else {
+                await colorRoles.update(message.member);
+                role = colorRoles.findColorRole(message.member);
+            }
         }
         role.setColor(str.toUpperCase());
         message.react("🆗");
