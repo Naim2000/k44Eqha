@@ -97,12 +97,11 @@ commands.color = {
     exec: async function (message) {
         var str = message.txt(1);
         if (!str) return false;
-        var role = colorRoles.get(message.member);
+        var role = message.member.roles.find(role => role.name.startsWith('['));
         if (!role) {
             if (message.author.presence.status == "offline")
-               message.reply([
-                    "You are invisible.",
-                    "I can't see you.",
+               return message.reply([
+                    "You are offline.",
 					"I can't change your color when you're invisible."
                ].random());
             else await colorRoles.update(message.member); 
