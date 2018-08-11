@@ -80,13 +80,14 @@ colorRoles.pruneOrphanRoles = async function() { // delete all color roles that 
 
 // event listeners
 
-dClient.on('presenceUpdate', (oldMember, newMember) => { // update color role on presence update // emitted also on member join
+dClient.on('presenceUpdate', async (oldMember, newMember) => { // update color role on presence update // emitted also on member join
+    if (!oldMember.presence || !newMember.presence) return;
     if (oldMember.presence.status != newMember.presence.status) {
-        colorRoles.update(newMember);
+        await colorRoles.update(newMember);
     }
 });
-dClient.on('guildMemberRemove', member => { // update (delete) color role on member leave
-    colorRoles.update(member);
+dClient.on('guildMemberRemove', async member => { // update (delete) color role on member leave
+    await colorRoles.update(member);
 });
 
 
