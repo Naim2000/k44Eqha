@@ -4,7 +4,7 @@ global.colorRoles = new Object();
 colorRoles.update = async function (member) { // create or remove member's color role based on presence
     if (member.guild.id != config.guildID) return;
     let existingColorRole = member.roles.find(role => role.name.startsWith('['));
-    if (member.user.presence.status == "offline") { // they must not have the role
+    if (member.presence.status == "offline") { // they must not have the role
         if (!existingColorRole) return; // ok, they already don't have the role
         // save and delete their color role
         let role = existingColorRole;
@@ -61,7 +61,11 @@ colorRoles.updateAll = async function() { // update all members' color roles
     await guild.members.fetch(); // load all members
     for (let member of guild.members) {
         member = member[1];
-        await colorRoles.update(member);
+        try {
+            await colorRoles.update(member);
+        } catch(e) {
+            console.error(e.stack);
+        }
     }
 }
 
