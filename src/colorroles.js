@@ -99,13 +99,13 @@ commands.color = {
         if (!str) return false;
         var role = colorRoles.get(message.member);
         if (!role) {
-            if (message.author.presence.status == "invisible")
+            if (message.author.presence.status == "offline")
                message.reply([
-					"You are invisible.",
-					"I can't change your color when you're invisible.",
-					"How can I change your color if I can't see you?",
+                    "You are invisible.",
+                    "I can't see you.",
+					"I can't change your color when you're invisible."
                ].random());
-            else await colorRoles.ensure(message.member); 
+            else await colorRoles.update(message.member); 
         }
         role.setColor(str.toUpperCase());
         message.react("🆗");
@@ -121,7 +121,7 @@ commands.title = {
         if (!str) return false;
         if (str == "none") str = "";
         if (str.length > 98) str = str.substr(0,97) + '…';
-        var role = colorRoles.get(message.member);
+        var role = message.member.roles.find(role => role.name.startsWith('['));
         role.setName(`[${str}]`);
         message.react("🆗");
     }
