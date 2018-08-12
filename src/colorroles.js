@@ -86,7 +86,7 @@ colorRoles.pruneOrphanRoles = async function() { // delete all color roles that 
 // event listeners
 
 dClient.on('presenceUpdate', async (oldPresence, newPresence) => { // update color role on presence update // emitted also on member join (iirc)
-	if (oldPresence && oldPresence.status == newPresence.status) return;
+	//if (oldPresence && oldPresence.status == newPresence.status) return; // sometimes oldPresence.status getter throws an error
 	colorRoles.update(newPresence.member);
 });
 
