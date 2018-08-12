@@ -85,16 +85,9 @@ colorRoles.pruneOrphanRoles = async function() { // delete all color roles that 
 
 // event listeners
 
-dClient.on('presenceUpdate', async (oldMember, newMember) => { // update color role on presence update // emitted also on member join (iirc)
-/*	if (!oldMember || !newMember) return;
-	if (!oldMember.presence || !newMember.presence) return;
-	// TODO discord.js bug?
-	// oldMember.presence & newMember.presence are undefined
-
-	if (oldMember.presence.status != newMember.presence.status) {
-		await colorRoles.update(newMember);
-	}*/
-	await colorRoles.update(newMember.user.presence.status);
+dClient.on('presenceUpdate', async (oldPresence, newPresence) => { // update color role on presence update // emitted also on member join (iirc)
+	if (oldPresence && oldPresence.status == newPresence.status) return;
+	colorRoles.update(newPresence.member);
 });
 
 dClient.on('guildMemberRemove', async member => { // update (delete) color role on member leave
