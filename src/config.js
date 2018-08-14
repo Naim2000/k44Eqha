@@ -7,7 +7,8 @@ module.exports = {
     "MONGODB_URI": testmode ? "mongodb://localhost/k4t" : process.env.MONGODB_URI,
 
 	"webhooks": {
-		"welcome": process.env.WEBHOOK_WELCOME.split("/"),
+        "welcome": process.env.WEBHOOK_WELCOME.split("/"),
+        "error": process.env.WEBHOOK_ERROR.split("/")
 	},
 	
     "opID": "281134216115257344",

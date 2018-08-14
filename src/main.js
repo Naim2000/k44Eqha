@@ -6,6 +6,23 @@ global.Discord = require('discord.js');
 global.fs = require('fs');
 global.dClient = new Discord.Client({ disableEveryone: true });
 
+// error handling
+{
+	let webhook = new Discord.WebhookClient(config.webhooks.error[0], config.webhooks.error[1]);
+	global.onError = function logError(error) {
+		let msg = error.stack || error.message || error;
+		console.error(msg);
+		try {
+			webhook.send(`\`\`\`\n${msg}\n\`\`\``).catch(()=>{});
+		} catch(e) {}
+	}
+	process.on('unhandledRejection', onError);
+	process.on('uncaughtException', onError);
+	dClient.on('error', onError);
+	dClient.on('warn', onError);
+}
+
+
 global.dbClient = new (require('pg').Client)({
 	connectionString: process.env.DATABASE_URL,
 	ssl: !testmode,
@@ -31,5 +48,3 @@ dClient.once('ready', () => {
 	require('./misc');
 
 });
-dClient.on('error', console.error);
-dClient.on('warn', console.warn);
