@@ -119,6 +119,10 @@ commands.color = {
 				role = colorRoles.findColorRole(message.member);
 			}
 		}
+		/*if (!role) { // somehow this happened
+			let a = 0;
+			while (!(role = colorRoles.findColorRole(message.member)) && a++ < 10) {}
+		}*/
 		role.setColor(str.toUpperCase());
 		message.react("🆗");
 	}
