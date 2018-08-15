@@ -14,7 +14,7 @@
 
 // view deleted channels
 (async function(){
-    var vcid = config.channels.voice;
+    var vcid = config.channels.view_deleted_channels;
     var rid = config.roles.viewing_deleted_channels;
     dClient.on('voiceStateUpdate', async (oldState, newState) => {
         if (oldState.channelID != vcid && newState.channelID == vcid) {

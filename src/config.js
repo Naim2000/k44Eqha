@@ -16,7 +16,7 @@ module.exports = {
 
     "channels": { // includes voice channels & category channels
         "main": testmode ? "467473467634089987" : "321819041348190249",
-        "voice": testmode ? "467473467634089989" : "425060452129701889",
+        "view_deleted_channels": testmode ? "467473467634089989" : "425060452129701889",
         "name_collection": testmode ? "467481952728121345" : '379738469511069698',
         "mpp_bridges": testmode ? "467481904707534850" : '360557444952227851',
         "user_channels": testmode ? "467482031157149709" : '399735134061985792',
