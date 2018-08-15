@@ -16,13 +16,13 @@
 (async function(){
     var vcid = config.channels.voice;
     var rid = config.roles.viewing_deleted_channels;
-    dClient.on('voiceStateUpdate', async (oldMember, newMember) => {
-        if (oldMember.voiceChannelID != vcid && newMember.voiceChannelID == vcid) {
+    dClient.on('voiceStateUpdate', async (oldState, newState) => {
+        if (oldState.channelID != vcid && newState.channelID == vcid) {
             // member joined the channel
-            newMember.roles.add(newMember.guild.roles.get(rid));
-        } else if (oldMember.voiceChannelID == vcid && newMember.voiceChannelID != vcid) {
+            newState.member.roles.add(newState.member.guild.roles.get(rid));
+        } else if (oldState.channelI == vcid && newState.channelID != vcid) {
             // member left the channel
-            newMember.roles.remove(newMember.guild.roles.get(rid));
+            newState.member.roles.remove(newState.member.guild.roles.get(rid));
         }
     });
 })();
