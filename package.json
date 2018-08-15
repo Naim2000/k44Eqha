@@ -1,7 +1,7 @@
 {
 	"dependencies": {
 		"async-exit-hook": "^2.0.1",
-		"discord.js": "github:bdistin/discord.js#patch-8",
+		"discord.js": "github:hydrabolt/discord.js",
 		"mongodb": "^3.0.0-rc0",
 		"pg": "^7.4.0",
 		"puppeteer": "^0.13.0",
