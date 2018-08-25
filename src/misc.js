@@ -20,7 +20,7 @@
         if (oldState.channelID != vcid && newState.channelID == vcid) {
             // member joined the channel
             newState.member.roles.add(newState.member.guild.roles.get(rid));
-        } else if (oldState.channelI == vcid && newState.channelID != vcid) {
+        } else if (oldState.channelID == vcid && newState.channelID != vcid) {
             // member left the channel
             newState.member.roles.remove(newState.member.guild.roles.get(rid));
         }
