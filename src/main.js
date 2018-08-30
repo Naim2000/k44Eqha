@@ -10,7 +10,7 @@ global.dClient = new Discord.Client({ disableEveryone: true });
 {
 	let webhook = new Discord.WebhookClient(config.webhooks.error[0], config.webhooks.error[1]);
 	global.onError = function logError(error) {
-		let msg = error.stack || error.message || error;
+		let msg = error && (error.stack || error.message || error);
 		console.error(msg);
 		try {
 			webhook.send(`\`\`\`\n${msg}\n\`\`\``).catch(()=>{});
