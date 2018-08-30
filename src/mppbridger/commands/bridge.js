@@ -17,8 +17,10 @@ module.exports = {
 					await dbClient.query("UPDATE bridges SET disabled = false WHERE mpp_room = $1", [room]);
 					await channel.setParent(config.channels.mpp_bridges);
 					await channel.lockPermissions();
-					createMPPbridge(room, existingBridge.mpp_room, existingBridge.site, existingBridge.webhook_id, existingBridge.webhook_token);
-					await msg.reply(`${site} room ${room} has been re-bridged.`);
+					let existingClient = clients.MPP[room];
+					if (existingClient) existingClient.start();
+					else createMPPbridge(room, existingBridge.discord_channel_id, existingBridge.site, existingBridge.webhook_id, existingBridge.webhook_token);
+					await msg.reply(`${site} room ${room} has been re-bridged to ${channel}.`);
 					return;
 				}
 			}
