@@ -22,6 +22,7 @@ module.exports = {
 		if (client) client.stop();
 		var channel = dClient.channels.get(bridge.discord_channel_id)
 		await channel.setParent(config.channels.deleted_bridges);
+		await new Promise(resolve => setTimeout(resolve, 500));
 		await channel.lockPermissions();
 		msg.reply(`${bridge.mpp_room} has been unbridged.`);
 	}

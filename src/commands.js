@@ -80,6 +80,7 @@ global.commands = {
 			}
 			if (!channel.permissionsFor(msg.member).has('MANAGE_CHANNELS')) return msg.react('🚫');
 			await channel.setParent(config.channels.deleted_channels);
+			await new Promise(resolve => setTimeout(resolve, 500));
 			await channel.lockPermissions();
 			msg.react('🆗');
 		}

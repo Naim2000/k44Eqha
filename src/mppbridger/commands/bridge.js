@@ -16,6 +16,7 @@ module.exports = {
 					let channel = dClient.guilds.get(config.guildID).channels.get(existingBridge.discord_channel_id);
 					await dbClient.query("UPDATE bridges SET disabled = false WHERE mpp_room = $1", [room]);
 					await channel.setParent(config.channels.mpp_bridges);
+					await new Promise(resolve => setTimeout(resolve, 500));
 					await channel.lockPermissions();
 					let existingClient = clients.MPP[room];
 					if (existingClient) existingClient.start();
