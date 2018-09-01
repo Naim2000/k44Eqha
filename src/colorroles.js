@@ -74,7 +74,7 @@ colorRoles.pruneOrphanRoles = async function() { // delete all color roles that 
 	var guild = dClient.defaultGuild || dClient.guilds.get(config.guildID);
 	for (let role of guild.roles) {
 		role = role[1];
-		if (role.name.startsWith('[') && role.members.length == 0)
+		if (role.name.startsWith('[') && !role.members.size)
 			await role.delete();
 	}
 };
