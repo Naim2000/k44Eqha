@@ -31,5 +31,5 @@
 // arrange bots at bottom of list
 dClient.on('guildMemberAdd', member => {
     if (member.user.bot)
-        member.setNickname(`\udb40\udc00${member.displayName}`);
+        member.setNickname(`\udb40\udc00${member.displayName}`.substr(0,32));
 });
