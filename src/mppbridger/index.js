@@ -60,9 +60,12 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 	gClient.canConnect = true;
 	clientConnector.enqueue(gClient);
 
-	
 
-	
+	gClient.channelCorrectorInterval = setInterval(()=>{
+		if (gClient.channel && gClient.channel._id != room) gClient.setChannel(room);
+	}, 1000);
+
+
 	var isConnected = false;
 	gClient.on('connect', () => {
 		console.log(`Connected to room ${room} of ${site} server`);
