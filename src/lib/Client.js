@@ -98,7 +98,7 @@ Client.prototype.connect = function() {
 		self.emit("disconnect");
 		self.emit("status", "Offline mode");
 
-		/*// reconnect! // cant have them all reconnecting at same time
+		// reconnect!
 		if(self.connectionTime) {
 			self.connectionTime = undefined;
 			self.connectionAttempts = 0;
@@ -109,7 +109,7 @@ Client.prototype.connect = function() {
 		var idx = self.connectionAttempts;
 		if(idx >= ms_lut.length) idx = ms_lut.length - 1;
 		var ms = ms_lut[idx];
-		setTimeout(self.connect.bind(self), ms);*/
+		setTimeout(self.connect.bind(self), ms);
 	});
 	this.ws.addEventListener("error", function(error) {
 		console.error(error.toString());
