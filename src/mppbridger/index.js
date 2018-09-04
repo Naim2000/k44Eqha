@@ -45,7 +45,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 	gClient.setChannel(/*(site == "MPP" && room == "lobby") ? "lolwutsecretlobbybackdoor" : */room);
 	gClient.start();
 
-	// ensure the client 
+	// maintain the client's presence in the channel
 	gClient.channelCorrectorInterval = setInterval(()=>{
 		// if client is connected and not in a channel (meaning setChannel failed due to ratelimit because another client joined a channel with the same user within the last second) OR client is in a channel but it is not the right channel…
 		if ((gClient.isConnected() && !gClient.channel) || (gClient.channel && gClient.channel._id != room)) 
@@ -54,20 +54,20 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 	}, 1000);
 
 
-	var isConnected = false;
+	var isConnected = false; // TODO use gClient.isConnected() ?
 	gClient.on('connect', () => {
 		console.log(`[${site}][${room}] Connected to server`);
-		dSend(`**Connected**`); // TODO say what room it actually connected to ?
+		dSend(`**Connected to server; joining channel…**`); // TODO say what room it actually connected to ?
 		isConnected = true;
 	});
 	gClient.on('hi', ()=>{
-		console.log(`[${site}][${room}] Joined channel ${gClient.channel && gClient.channel._id}`);
+		console.log(`[${site}][${room}] Received greeting`);
 		if (!testmode) gClient.sendArray([{m: "userset", set: {name: config.mppname}}])
 	});
 	gClient.on('disconnect', () => {
 		if (isConnected) {
 			console.log(`[${site}][${room}] Disconnected from server`);
-			dSend(`**Disconnected**`);
+			dSend(`**Disconnected from server**`);
 			isConnected = false;
 		}
 	});
@@ -77,44 +77,56 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 		
 
 
-
-	let lastCh = room;
-	gClient.on('ch', msg => {
-		// announce channel change
-		if (lastCh && msg.ch._id !== lastCh) {
-			dSend(`**Channel changed from \`${lastCh}\` to \`${msg.ch._id}\`**`);
-			console.log(`[${site}][${room}] Channel changed from ${lastCh} to ${msg.ch._id}`);
+	// on channel change
+	{
+		let lastCh;
+		gClient.on('ch', async msg => {
+			// announce channel join
+			if (!lastCh) {
+				dSend(`**Joined channel \`${msg.ch._id}\`**`);
+				console.log(`[${site}][${room}] Joined channel ${msg.ch._id}`);
+			}
+			// announce channel change
+			else if (msg.ch._id !== lastCh) {
+				dSend(`**Channel changed from \`${lastCh}\` to \`${msg.ch._id}\`**`);
+				console.log(`[${site}][${room}] Channel changed from ${lastCh} to ${msg.ch._id}`);
+			}
 			lastCh = msg.ch._id;
+
+		});
+	}
+	
+	
+	// on chown
+	gClient.on('ch', async function(msg){
+		// catch dropped crown
+		if (msg.ch.crown && !msg.ch.crown.hasOwnProperty('participantId')) {
+			gClient.sendArray([{m:'chown', id: gClient.getOwnParticipant().id}]); // if possible
+			var avail_time = msg.ch.crown.time + 15000 - gClient.serverTimeOffset;
+			var ms = avail_time - Date.now();
+			setTimeout(()=> gClient.sendArray([{m:'chown', id: gClient.getOwnParticipant().id}]) , ms);
 		}
-		(async function(){
-			// catch dropped crown
-			if (msg.ch.crown && !msg.ch.crown.hasOwnProperty('participantId')) {
-				gClient.sendArray([{m:'chown', id: gClient.getOwnParticipant().id}]); // if possible
-				var avail_time = msg.ch.crown.time + 15000 - gClient.serverTimeOffset;
-				var ms = avail_time - Date.now();
-				setTimeout(()=> gClient.sendArray([{m:'chown', id: gClient.getOwnParticipant().id}]) , ms);
-			}
-			// transfer crown to owner
-			if (msg.ppl && msg.ch.crown && msg.ch.crown.participantId == gClient.getOwnParticipant().id) {
-				var res = await dbClient.query("SELECT owner_mpp__id FROM bridges WHERE mpp_room = $1 AND site = $2;", [room, site]);
-				if (res.rows.length == 0) return;
-				var owner = res.rows[0].owner_mpp__id;
-				if (!owner) return;
-				msg.ppl.some(part => {
-					if (part._id == owner) {
-						gClient.sendArray([{m:'chown', id: part.id}]);
-						return true;
-					} else return false;
-				});
-			}
-		})();
+		// transfer crown to owner
+		if (msg.ppl && msg.ch.crown && msg.ch.crown.participantId == gClient.getOwnParticipant().id) {
+			var res = await dbClient.query("SELECT owner_mpp__id FROM bridges WHERE mpp_room = $1 AND site = $2;", [room, site]);
+			if (res.rows.length == 0) return;
+			var owner = res.rows[0].owner_mpp__id;
+			if (!owner) return;
+			msg.ppl.some(part => {
+				if (part._id == owner) {
+					gClient.sendArray([{m:'chown', id: part.id}]);
+					return true;
+				} else return false;
+			});
+		}
 	});
+	
 
 
 
 
 	// MPP to Discord
-	gClient.on('a', msg => {
+	gClient.on('a', async msg => {
 		if (msg.p._id == gClient.getOwnParticipant()._id) return;
 		var id = msg.p._id.substr(0,6);
 		var name = msg.p.name.replace(/discord.gg\//g, 'discord.gg\\/');
@@ -126,7 +138,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 	// Discord to MPP
 	{
 		let msgQueue = [];
-		dClient.on('message', message => {
+		dClient.on('message', async message => {
 			if (message.channel.id !== DiscordChannelID || message.author.bot || message.content.startsWith('!')) return;
 			var str = message.cleanContent;
 			var arr = [];
@@ -148,16 +160,16 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 
 
 	// announce join/leave
-	gClient.on('participant added', participant => {
+	gClient.on('participant added', async participant => {
 		dSend(`\`${participant._id.substr(0,6)}\` ___**${participant.name.replace(/<@/g, "<\\@")}** entered the room.___`);
 	});
-	gClient.on('participant removed', participant => {
+	gClient.on('participant removed', async participant => {
 		dSend(`\`${participant._id.substr(0,6)}\` ___**${participant.name.replace(/<@/g, "<\\@")}** left the room.___`);
 	});
 
 
 
-
+	// on notifications
 	gClient.on('notification', async msg => {
 		// show notification
 		_dSend(undefined, {
@@ -195,7 +207,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 
 
 	// make room invisible when nobody else is in it
-	gClient.on("ch", function(msg){
+	gClient.on("ch", async function(msg){
 		if (gClient.isOwner()) {
 			if (gClient.countParticipants() <= 1) {
 				gClient.sendArray([{m:'chset', set: { visible: false }}])	
