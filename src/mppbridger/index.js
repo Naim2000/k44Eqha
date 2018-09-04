@@ -8,27 +8,29 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 	
 
 	// discord message sending
-	var msgBuffer = [];
-	function _dSend(msg, embed) {
-		if (webhook && !config.testmode) {
-			let username = gClient.channel && gClient.channel._id || room;
-			if (username.length > 32) username = username.substr(0,31) + '…';
-			else if (username.length < 2) username = undefined;
-			webhook.send(msg, {username, embed, split:{char:''}}).catch(e => {
-				console.error(e);
-				DiscordChannel.send(msg, {embed, split:{char:''}}).catch(console.error);
-			});
+	{
+		let msgBuffer = [];
+		function _dSend(msg, embed) {
+			if (webhook && !config.testmode) {
+				let username = gClient.channel && gClient.channel._id || room;
+				if (username.length > 32) username = username.substr(0,31) + '…';
+				else if (username.length < 2) username = undefined;
+				webhook.send(msg, {username, embed, split:{char:''}}).catch(e => {
+					console.error(e);
+					DiscordChannel.send(msg, {embed, split:{char:''}}).catch(console.error);
+				});
+			}
+			else DiscordChannel.send(msg, {embed, split:{char:''}}).catch(console.error);
 		}
-		else DiscordChannel.send(msg, {embed, split:{char:''}}).catch(console.error);
+		function dSend(msg) {
+			msgBuffer.push(msg);
+		}
+		setInterval(()=>{
+			if (msgBuffer.length == 0) return;
+			_dSend(msgBuffer.join('\n'));
+			msgBuffer = [];
+		}, 2000);
 	}
-	function dSend(msg) {
-		msgBuffer.push(msg);
-	}
-	setInterval(()=>{
-		if (msgBuffer.length == 0) return;
-		_dSend(msgBuffer.join('\n'));
-		msgBuffer = [];
-	}, 2000);
 	
 
 
@@ -122,21 +124,25 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 	});
 
 	// Discord to MPP
-	dClient.on('message', message => {
-		if (message.channel.id !== DiscordChannelID || message.author.bot || message.content.startsWith('!')) return;
-		var str = message.cleanContent;
-		var arr = [];
-		if (str.startsWith('/') || str.startsWith('\\')) {
-			arr.push({m:"a", message:
-				`⤹ ${message.member.displayName}`
-			});
-		} else str = message.member.displayName + ': ' + str;
-		if (str.startsWith('\\')) str = str.slice(1);
-		if (message.attachments.first()) str += ' '+message.attachments.first().url;
-		if (str.length > 512) str = str.substr(0,511) + '…';
-		arr.push({m:"a", message:str});
-		gClient.sendArray(arr);
-	});
+	{
+		let msgQueue = [];
+		dClient.on('message', message => {
+			if (message.channel.id !== DiscordChannelID || message.author.bot || message.content.startsWith('!')) return;
+			var str = message.cleanContent;
+			var arr = [];
+			if (str.startsWith('/') || str.startsWith('\\')) 
+				msgQueue.push(`⤹ ${message.member.displayName}`);	
+			else
+				str = message.member.displayName + ': ' + str;
+			if (str.startsWith('\\')) str = str.slice(1);
+			if (message.attachments.first()) str += ' '+message.attachments.first().url;
+			if (str.length > 512) str = str.substr(0,511) + '…';
+			msgQueue.push(str);
+		});
+		setInterval(()=>{
+			gClient.sendArray([{m:'a', message: msgQueue.unshift()}]);
+		}, 1600); // just about fastest without exceeding quota; I figured quota is 4 messages per 6 seconds in lobbies
+	}
 
 
 
