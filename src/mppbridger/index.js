@@ -1,22 +1,6 @@
 var Client = require('../lib/Client.js');
 global.clients = {};
 
-
-
-global.clientConnector = {
-	queue: [],
-	enqueue: function(client) {
-		if (this.queue.includes(client)) return;
-		this.queue.push(client);
-	},
-	interval: setInterval(function(){
-		var client = clientConnector.queue.shift();
-		if (client) client.connect();
-	}, 2000)
-}
-
-
-
 global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site = 'MPP', webhookID, webhookToken) {
 	var DiscordChannel = dClient.channels.get(DiscordChannelID);
 	if (!DiscordChannel) return console.error(`Couldn't bridge ${site} ${room} because Discord Channel ${DiscordChannelID} is missing!`);
@@ -44,7 +28,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 		if (msgBuffer.length == 0) return;
 		_dSend(msgBuffer.join('\n'));
 		msgBuffer = [];
-	}, 2000); //TODO make changeable
+	}, 2000);
 	
 
 
@@ -57,31 +41,33 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 		undefined;
 	if (!gClient) return console.error(`Invalid site ${site}`);
 	gClient.setChannel(/*(site == "MPP" && room == "lobby") ? "lolwutsecretlobbybackdoor" : */room);
-	gClient.canConnect = true;
-	clientConnector.enqueue(gClient);
+	gClient.start();
 
-
+	// ensure the client 
 	gClient.channelCorrectorInterval = setInterval(()=>{
-		if (gClient.channel && gClient.channel._id != room) gClient.setChannel(room);
+		// if client is connected and not in a channel (meaning setChannel failed due to ratelimit because another client joined a channel with the same user within the last second) OR client is in a channel but it is not the right channel…
+		if ((gClient.isConnected() && !gClient.channel) || (gClient.channel && gClient.channel._id != room)) 
+			// …set the channel!
+			gClient.setChannel(room); 
 	}, 1000);
 
 
 	var isConnected = false;
 	gClient.on('connect', () => {
-		console.log(`Connected to room ${room} of ${site} server`);
+		console.log(`[${site}][${room}] Connected to server`);
 		dSend(`**Connected**`); // TODO say what room it actually connected to ?
 		isConnected = true;
 	});
 	gClient.on('hi', ()=>{
+		console.log(`[${site}][${room}] Joined channel ${gClient.channel && gClient.channel._id}`);
 		if (!testmode) gClient.sendArray([{m: "userset", set: {name: config.mppname}}])
 	});
 	gClient.on('disconnect', () => {
 		if (isConnected) {
-			console.log(`Disconnected from room ${room} of ${site} server`);
+			console.log(`[${site}][${room}] Disconnected from server`);
 			dSend(`**Disconnected**`);
 			isConnected = false;
 		}
-		clientConnector.enqueue(gClient);
 	});
 	/*gClient.on('status', status => {
 		console.log(`[${site}] [${room}] ${status}`);
@@ -261,10 +247,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 		arr.sort((a, b) => {return a.position - b.position});
 		let i = 0;
 		arr.forEach(bridge => {
-			setTimeout(function(){
-				createMPPbridge(bridge.mpp_room, bridge.discord_channel_id, bridge.site, bridge.webhook_id, bridge.webhook_token, bridge.owner_mpp__id);
-			}, i);
-			i = i + 2000;
+			createMPPbridge(bridge.mpp_room, bridge.discord_channel_id, bridge.site, bridge.webhook_id, bridge.webhook_token, bridge.owner_mpp__id);
 		});
 	}
 })();
