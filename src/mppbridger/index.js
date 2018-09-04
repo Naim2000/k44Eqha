@@ -152,7 +152,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 			msgQueue.push(str);
 		});
 		setInterval(()=>{
-			gClient.sendArray([{m:'a', message: msgQueue.unshift()}]);
+			gClient.sendArray([{m:'a', message: msgQueue.shift()}]);
 		}, 1600); // just about fastest without exceeding quota; I figured quota is 4 messages per 6 seconds in lobbies
 	}
 
