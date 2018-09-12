@@ -16,7 +16,7 @@ global.dClient = new Discord.Client({ disableEveryone: true });
 			webhook.send(`${title ? `**${title}:**` : ""}\`\`\`\n${msg}\n\`\`\``).catch(()=>{});
 		} catch(e) {}
 	}
-	process.on('unhandledRejection', error => onError(error, "Unhandled Rejection");
+	process.on('unhandledRejection', error => onError(error, "Unhandled Rejection"));
 	process.on('uncaughtException', error => onError(error, "Uncaught Exception"));
 	dClient.on('error', error => onError(error, "Discord Client Error"));
 	dClient.on('warn', error => onError(error, "Discord Client Warning"));
