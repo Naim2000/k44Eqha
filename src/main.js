@@ -9,17 +9,17 @@ global.dClient = new Discord.Client({ disableEveryone: true });
 // error handling
 {
 	let webhook = new Discord.WebhookClient(config.webhooks.error[0], config.webhooks.error[1]);
-	global.onError = function logError(error) {
+	global.onError = function logError(error, title) {
 		let msg = error && (error.stack || error.message || error);
-		console.error(msg);
+		console.error(title + ':\n', msg);
 		try {
-			webhook.send(`\`\`\`\n${msg}\n\`\`\``).catch(()=>{});
+			webhook.send(`${title ? `**${title}:**` : ""}\`\`\`\n${msg}\n\`\`\``).catch(()=>{});
 		} catch(e) {}
 	}
-	process.on('unhandledRejection', onError);
-	process.on('uncaughtException', onError);
-	dClient.on('error', onError);
-	dClient.on('warn', onError);
+	process.on('unhandledRejection', error => onError(error, "Unhandled Rejection");
+	process.on('uncaughtException', error => onError(error, "Uncaught Exception"));
+	dClient.on('error', error => onError(error, "Discord Client Error"));
+	dClient.on('warn', error => onError(error, "Discord Client Warning"));
 }
 
 
