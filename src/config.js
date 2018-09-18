@@ -21,7 +21,7 @@ module.exports = {
         "mpp_bridges": testmode ? "467481904707534850" : '360557444952227851',
         "user_channels": testmode ? "467482031157149709" : '399735134061985792',
         "deleted_channels": testmode ? "467482085657935872" : '425054198699261953',
-        "deleted_bridges": testmode ? "489900312216207361" : '451838300068511745',
+        "deleted_bridges": testmode ? "467482121657778176" : '489900312216207361',
         "mpp_screenshot": testmode ? "467482164611514388" : '383773548810076163',
         "owop_screenshot": testmode ? "467482202217906226" : '399079481161023492'
     },
