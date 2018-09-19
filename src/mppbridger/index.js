@@ -162,10 +162,10 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 
 	// announce join/leave
 	gClient.on('participant added', async participant => {
-		dSend(`\`${participant._id.substr(0,6)}\` ___**${participant.name.replace(/<@/g, "<\\@")}** entered the room.___`);
+		dSend(`\`${participant._id.substr(0,6)}\` ___**${participant.name.replace(/<@/g, "<\\@").replace(/[_~*\\]/g,"\\$&")}** entered the room.___`);
 	});
 	gClient.on('participant removed', async participant => {
-		dSend(`\`${participant._id.substr(0,6)}\` ___**${participant.name.replace(/<@/g, "<\\@")}** left the room.___`);
+		dSend(`\`${participant._id.substr(0,6)}\` ___**${participant.name.replace(/<@/g, "<\\@").replace(/[_~*\\]/g,"\\$&")}** left the room.___`);
 	});
 
 
