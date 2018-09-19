@@ -17,9 +17,10 @@ global.dClient = new Discord.Client({ disableEveryone: true });
 		} catch(e) {}
 	}
 	process.on('unhandledRejection', error => onError(error, "Unhandled Rejection"));
-	process.on('uncaughtException', error => onError(error, "Uncaught Exception"));
+	exitHook.uncaughtExceptionHandler(error => onError(error, "Uncaught Exception"));
 	dClient.on('error', error => onError(error, "Discord Client Error"));
 	dClient.on('warn', error => onError(error, "Discord Client Warning"));
+
 }
 
 
