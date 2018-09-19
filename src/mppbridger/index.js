@@ -130,9 +130,9 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 	gClient.on('a', async msg => {
 		if (msg.p._id == gClient.getOwnParticipant()._id) return;
 		var id = msg.p._id.substr(0,6);
-		var name = msg.p.name.replace(/discord.gg\//g, 'discord.gg\\/');
-		var str = `\`${id}\` **${name}:** ${msg.a}`;
-		str = str.replace(/<@/g, "<\\@");
+		var name = msg.p.name
+		var name = sanitizeName(msg.p.name);
+		var str = `\`${id}\` **${name}:** ${msg.a.replace(/<@/g, "<\\@")}`;
 		dSend(str);
 	});
 
@@ -162,10 +162,10 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 
 	// announce join/leave
 	gClient.on('participant added', async participant => {
-		dSend(`\`${participant._id.substr(0,6)}\` ___**${participant.name.replace(/<@/g, "<\\@").replace(/[_~*\\]/g,"\\$&")}** entered the room.___`);
+		dSend(`\`${participant._id.substr(0,6)}\` ___**${sanitizeName(participant.name)}** entered the room.___`);
 	});
 	gClient.on('participant removed', async participant => {
-		dSend(`\`${participant._id.substr(0,6)}\` ___**${participant.name.replace(/<@/g, "<\\@").replace(/[_~*\\]/g,"\\$&")}** left the room.___`);
+		dSend(`\`${participant._id.substr(0,6)}\` ___**${sanitizeName(participant.name)}** left the room.___`);
 	});
 
 
@@ -286,3 +286,19 @@ commands.unbridge = require('./commands/unbridge');
 commands.chown = require('./commands/chown');
 commands.list = require('./commands/list');
 commands.ban = require('./commands/ban');
+
+
+
+
+
+
+
+/* util */
+
+function sanitizeName(str){ // for showing mpp names in discord
+	str = str.replace(/<@/g, "<\\@"); // mentions
+	//TODO escape channel mentions too? not necessary but for consistency
+	str = str.replace(/discord.gg\//g, 'discord.gg\\/'); // invites
+	str = str.replace(/[_~*\\]/g,"\\$&"); // formatting
+	return str;
+}
