@@ -296,9 +296,9 @@ commands.ban = require('./commands/ban');
 /* util */
 
 function sanitizeName(str){ // for showing mpp names in discord
-	str = str.replace(/<@/g, "<\\@"); // mentions
-	//TODO escape channel mentions too? not necessary but for consistency
-	str = str.replace(/discord.gg\//g, 'discord.gg\\/'); // invites
 	str = str.replace(/[_~*\\]/g,"\\$&"); // formatting
+	str = str.replace(/<@/g, "<\\@"); // mentions
+	str = str.replace(/discord.gg\//g, 'discord.gg\\/'); // invites
+	//TODO escape channel mentions too? not necessary but for consistency
 	return str;
 }
