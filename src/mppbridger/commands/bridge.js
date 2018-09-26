@@ -2,6 +2,10 @@ module.exports = {
 	usage: "<MPP room>",
 	description: "Creates a bridge to the specified MPP room.",
 	exec: async function (msg) {
+		if (msg.author.id != config.opID) {
+			msg.reply(`Bridging has been disabled; ask <@${config.opID}> if you actually want to bridge this room.`);
+			return;	
+		}
 		var site = 'MPP';
 		var room = msg.txt(1);
 		if (!room) return "EBADUSG";
