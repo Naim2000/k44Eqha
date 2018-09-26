@@ -32,7 +32,7 @@ module.exports = {
 
 
     
-    "mppname": "[discord.gg/k44Eqha]",
+    "mppname": "Anonymous",
     "disabledRooms": [
         "RP Room",
         "Legends of Alorgon {RP Room}",
