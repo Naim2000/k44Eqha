@@ -37,6 +37,6 @@
     };
     dClient.on('guildMemberAdd', onNick);
     dClient.on('guildMemberUpdate', async (oldMember, newMember) => {
-        if (newMember.nickname != oldMember.nickname) await onNick(newMember);
+        if (newMember.displayName != oldMember.displayName) await onNick(newMember);
     });
 })();
