@@ -29,7 +29,14 @@
 
 
 // arrange bots at bottom of list
-dClient.on('guildMemberAdd', member => {
-    if (member.user.bot)
-        member.setNickname(`\udb40\udc00${member.displayName}`.substr(0,32));
-});
+(async function(){
+    let prefix = "\udb40\udc00";
+    let onNick = async member => {
+    if (member.user.bot && !member.displayName.startsWith(prefix))
+        await member.setNickname(`${prefix}${member.displayName}`.substr(0,32));
+    };
+    dClient.on('guildMemberAdd', onNick);
+    dClient.on('guildMemberUpdate', async (oldMember, newMember) => {
+        if (newMember.nickname != oldMember.nickname) await onNick(newMember);
+    });
+})();
