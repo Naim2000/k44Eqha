@@ -142,11 +142,12 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 		dClient.on('message', async message => {
 			if (message.channel.id !== DiscordChannelID || message.author.bot || message.content.startsWith('!')) return;
 			var str = message.cleanContent;
+			var aname = `${message.member.displayName}#${message.member.user.discriminator}`;
 			var arr = [];
 			if (str.startsWith('/') || str.startsWith('\\')) 
-				msgQueue.push(`⤹ ${message.member.displayName}`);	
+				msgQueue.push(`⤹ ${aname}`);	
 			else
-				str = message.member.displayName + ': ' + str;
+				str = `${aname}: ${str}`;
 			if (str.startsWith('\\')) str = str.slice(1);
 			if (message.attachments.first()) str += ' '+message.attachments.first().url;
 			if (str.length > 512) str = str.substr(0,511) + '…';
