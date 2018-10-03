@@ -27,6 +27,28 @@
     });
 })();
 
+// prevent identical display names
+/*{
+    let onName = async function(member){
+        let names = member.guild.members.map(m => m.name);
+        if (names.includes(member.displayName)) {
+            let nam = member.displayName.split(' ');
+            let num = nam.pop();
+            if (isNaN(num)) {
+                nam.push(num);
+                num = "2";
+            } else {
+                num = String(++num);
+            }
+            nam = nam.substr(0, num.length-1);
+            await member.setNickname(`${nam} ${num}`);
+        }
+    }
+    dClient.on("guildMemberUpdate", async (oldMember, newMember) => {
+        if (oldMember.displayName != newMember.displayName) onName(newMember);
+    });
+}*/// didn't work D:
+
 
 // arrange bots at bottom of list
 (async function(){
@@ -38,5 +60,15 @@
     dClient.on('guildMemberAdd', onNick);
     dClient.on('guildMemberUpdate', async (oldMember, newMember) => {
         if (newMember.displayName != oldMember.displayName) await onNick(newMember);
+    });
+})();
+
+
+// prevent identical display names
+(async function(){
+    dClient.on("guildMemberUpdate", async (oldMember, newMember) => {
+        var displayNames = newMember.guild.members.map(m => m.displayName);
+        if (newMember.nickname && displayNames.includes(newMember.nickname)) newMember.setNickname('');
+        else if (displayNames.includes(newMember.displayName)) newMember.setNickname(`${newMember.displayName}_`.substr(0,32));
     });
 })();
