@@ -65,14 +65,14 @@
 
 
 // prevent identical display names
-(async function(){
+/*(async function(){
     dClient.on("guildMemberUpdate", async (oldMember, newMember) => {
-        /*var displayNames = newMember.guild.members.map(m => m.displayName);
-        if (newMember.nickname && displayNames.includes(newMember.nickname)) newMember.setNickname('');
-        else if (displayNames.includes(newMember.displayName)) newMember.setNickname(`${newMember.displayName}_`.substr(0,32));*/
+        //var displayNames = newMember.guild.members.map(m => m.displayName);
+        //if (newMember.nickname && displayNames.includes(newMember.nickname)) newMember.setNickname('');
+        //else if (displayNames.includes(newMember.displayName)) newMember.setNickname(`${newMember.displayName}_`.substr(0,32));
         for (let thisMember of newMember.guild.members) {
             thisMember = thisMember[1];
-            if (thisMember.id == newMember.id) continue;
+            if (thisMember.id == newMember.id) continue; //THIS WAS SUPPOSED TO MAKE IT NOT REPEATEDLY CHANGE YOUR NAME!
             if (newMember.nickname == thisMember.displayName) {
                 newMember.setNickname('');
                 break;
@@ -83,4 +83,4 @@
             }
         }
     });
-})();
+})();*/
