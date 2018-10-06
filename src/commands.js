@@ -89,7 +89,8 @@ global.commands = {
 
 	"eval": {
 		op: true,
-		usage: "<javascript>",
+		description: "Evaluate javascript",
+		usage: "<code>",
 		aliases: ['>'],
 		exec: async function (message) {
 			var msg = message, m = message,
@@ -110,19 +111,16 @@ global.commands = {
 
 	"exec": {
 		op: true,
+		description: "Run a shell command",
 		usage: "<command>",
 		aliases: ["$"],
 		exec: async function (msg) {
 			require("child_process").exec(msg.txt(1), function(error, stdout, stderr){
-				if (error) msg.channel.send(error, {split:{char:''}});
-				else {
-					var str = ""
-					if (stdout) msg.channel.send(stdout, {split:{char:''}});
-					if (stderr) msg.channel.send(stderr, {split:{char:''}});
-				}
+				if (error)  msg.channel.send(error,  {split:{char:'',maxLength:2000}});
+				if (stdout) msg.channel.send(stdout, {split:{char:'',maxLength:2000}});
+				if (stderr) msg.channel.send(stderr, {split:{char:'',maxLength:2000}});
 			})
 		}
-
 	},
 
 	"query": {
