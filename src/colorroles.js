@@ -5,7 +5,6 @@ colorRoles.findColorRole = function (member) { // get color role of member
 };
 
 colorRoles.update = async function (member) { // create or remove member's color role based on presence
-	if (member.guild.id != config.guildID) return;
 	let existingColorRole = colorRoles.findColorRole(member);
 	if (member.presence.status == "offline") { // they must not have the role
 		if (!existingColorRole) return; // ok, they already don't have the role
@@ -85,12 +84,12 @@ colorRoles.pruneOrphanRoles = async function() { // delete all color roles that 
 
 // event listeners
 
-dClient.on('presenceUpdate', async (oldPresence, newPresence) => { // update color role on presence update // emitted also on member join (iirc)
+dClient.on('local_presenceUpdate', async (oldPresence, newPresence) => { // update color role on presence update // emitted also on member join (iirc)
 	if (oldPresence && (oldPresence.status == newPresence.status)) return;
 	await colorRoles.update(newPresence.member);
 });
 
-dClient.on('guildMemberRemove', async member => { // update (delete) color role on member leave
+dClient.on('local_guildMemberRemove', async member => { // update (delete) color role on member leave
 	await colorRoles.update(member);
 });
 

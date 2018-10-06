@@ -42,6 +42,7 @@ dClient.once('ready', () => {
 	console.log('Discord Client Ready');
 	dClient.defaultGuild = dClient.guilds.get(config.guildID);
 
+	require('./local_events');
 	require('./commands');
 		require('./colorroles');
 		require('./mppbridger');

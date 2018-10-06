@@ -148,11 +148,9 @@ global.commands = {
 
 
 
-dClient.on('message', message => {
-	if (message.guild.id != config.guildID) return;
+dClient.on('local_message', async message => {
 	if (!message.content.startsWith('!')) return;
 	if (message.author.id === dClient.user.id) return;
-	if (message.guild && message.guild.id !== config.guildID) return;
 	
 	var args = message.content.split(' ');
 	var cmd = args[0].slice(1).toLowerCase();
