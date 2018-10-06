@@ -96,9 +96,12 @@ global.commands = {
 			var msg = message, m = message,
 			guild = message.guild,
 			channel = message.channel,
-			send = message.channel.send,
 			member = message.member,
-			client = dClient;
+			client = dClient,
+			send = function(){
+				channel.send.apply(channel, arguments);
+			},
+			say = send;
 			try {
 				var out = eval(message.content.substr(2));
 			} catch (error) {
