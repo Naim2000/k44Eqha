@@ -11,8 +11,8 @@ var wasConnected = false;
         wasConnected = true;
     });
     ws.on("message", message => {
-        if (typeof message.data != 'string') return;
-        var transmission = JSON.parse(message.data);
+        if (typeof message != 'string') return;
+        var transmission = JSON.parse(message);
         if (transmission.type == 'chat') {
             let chatmsg = transmission.message;
             if (chatmsg.type == "message") {
