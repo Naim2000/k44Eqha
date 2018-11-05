@@ -1,4 +1,3 @@
-require('https').globalAgent.options.ca = require('ssl-root-cas/latest').create();
 require('./util');
 global.config = require('./config');
 if (config.testmode) console.log('TEST MODE');
