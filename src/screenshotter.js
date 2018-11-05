@@ -20,6 +20,12 @@ global.screenshotter = {
 			try {
 				await page.goto('http://ourworldofpixels.com');
 				await page.evaluate(function () { OWOP.camera.zoom = 1; });
+				await new Promise(resolve => setTimeout(resolve, 2000));
+				await page.evaluate(function () {
+					for (let butt of document.getElementsByTagName('button')) {
+						if (butt.innerText == 'OK') {butt.click();break}
+					}
+				});
 				await new Promise(resolve => setTimeout(resolve, 5000));
 				let screenshot = await page.screenshot({ type: 'png' });
 				let filename = `Screenshot of ourworldofpixels.com/main @ ${new Date().toISOString()}.png`;

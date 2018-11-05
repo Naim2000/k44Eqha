@@ -35,7 +35,13 @@ dbClient.connect().then(function(){
 		global.mdbClient = client;
 		console.log("Connecting to Discord…");
 		dClient.login(config.DISCORD_TOKEN);
+	}, function(err){
+		console.error("Failed to connect to MongoDB:\n", err.stack);
+		process.exit(1);
 	});
+}, function(err){
+	console.error("Failed to connect to Postgres:\n", err.stack);
+	process.exit(1);
 });
 
 dClient.once('ready', () => {
