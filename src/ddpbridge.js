@@ -5,6 +5,7 @@ var Discord = require('discord.js');
 
 var ws;
 var wasConnected = false;
+var myId;
 
 (function connect() {
     ws = new WebSocket("wss://daydun.com:5012/?nick=%5Bdiscord.gg%2Fk44Eqha%5D");
@@ -18,12 +19,15 @@ var wasConnected = false;
         if (transmission.type == 'chat') {
             let chatmsg = transmission.message;
             if (chatmsg.type == "message") {
-                send2discord(`**${chatmsg.nick}:** ${chatmsg.content}`);
+                if (chatmsg.id != myId)
+                    send2discord(`**${chatmsg.nick}:** ${chatmsg.content}`);
             } else if (chatmsg.type == "join") {
                 send2discord(`__***${chatmsg.nick || chatmsg.id} joined.***__`);
             } else if (chatmsg.type == "leave") {
                 send2discord(`__***${chatmsg.nick || chatmsg.id} left.***__`);
             }
+        } else if (transmission.type == 'load') {
+            myId = transmission.id;
         }
     });
     ws.on("error", error => console.error(error));
