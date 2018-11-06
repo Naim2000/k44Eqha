@@ -21,7 +21,7 @@ var wasConnected = false;
             if (chatmsg.type == "message") {
                 //if (chatmsg.id != myId)
                 if (!chatmsg.content.startsWith('\u034f'))
-                    send2discord(`**${chatmsg.nick}:** ${chatmsg.content}`);
+                    send2discord(`**${chatmsg.user.nick}:** ${chatmsg.content}`);
             } else if (chatmsg.type == "join") {
                 send2discord(`__***${chatmsg.nick || chatmsg.id} joined.***__`);
             } else if (chatmsg.type == "leave") {
