@@ -41,7 +41,7 @@ function send2discord(message) {
 }
 
 function send2ddp(message) {
-    if (ws.readyState == WebSocket.OPEN) ws.send(message);
+    if (ws.readyState == WebSocket.OPEN) ws.send(JSON.stringify({type:"chat",message}));
 }
 
 dClient.on("local_message", message => {
