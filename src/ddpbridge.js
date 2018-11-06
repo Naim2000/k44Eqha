@@ -5,7 +5,7 @@ var Discord = require('discord.js');
 
 var ws;
 var wasConnected = false;
-var myId;
+//var myId;
 
 (function connect() {
     ws = new WebSocket("wss://daydun.com:5012/?nick=%5Bdiscord.gg%2Fk44Eqha%5D");
@@ -19,16 +19,17 @@ var myId;
         if (transmission.type == 'chat') {
             let chatmsg = transmission.message;
             if (chatmsg.type == "message") {
-                if (chatmsg.id != myId)
+                //if (chatmsg.id != myId)
+                if (!chatmsg.content.startsWith('\u034f'))
                     send2discord(`**${chatmsg.nick}:** ${chatmsg.content}`);
             } else if (chatmsg.type == "join") {
                 send2discord(`__***${chatmsg.nick || chatmsg.id} joined.***__`);
             } else if (chatmsg.type == "leave") {
                 send2discord(`__***${chatmsg.nick || chatmsg.id} left.***__`);
             }
-        } else if (transmission.type == 'load') {
+        } /*else if (transmission.type == 'load') {
             myId = transmission.id;
-        }
+        }*/
     });
     ws.on("error", error => console.error(error));
     ws.on("close", () => {
@@ -50,5 +51,5 @@ function send2ddp(message) {
 
 dClient.on("local_message", message => {
     if (message.channel.id != "508890674138054667" || message.author.bot) return;
-    send2ddp(`${message.member.displayName}#${message.author.discriminator}: ${message.cleanContent}`);
+    send2ddp(`\u034f${message.member.displayName}#${message.author.discriminator}: ${message.cleanContent}`);
 });
