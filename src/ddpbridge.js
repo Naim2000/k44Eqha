@@ -51,5 +51,7 @@ function send2ddp(message) {
 
 dClient.on("local_message", message => {
     if (message.channel.id != "508890674138054667" || message.author.bot) return;
-    send2ddp(`\u034f${message.member.displayName}#${message.author.discriminator}: ${message.cleanContent}`);
+    var x = message.cleanContent;
+    if (message.attachments.first()) x += " " + message.attachments.first().url;
+    send2ddp(`\u034f${message.member.displayName}#${message.author.discriminator}: ${x}`);
 });
