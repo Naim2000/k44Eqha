@@ -85,7 +85,6 @@ Client.prototype.connect = function() {
 		this.ws = new WebSocket(this.uri);
 	}
 	this.ws.binaryType = "arraybuffer";
-	this.emit("ws created");
 	var self = this;
 	this.ws.addEventListener("close", function(evt) {
 		self.user = undefined;
@@ -138,6 +137,7 @@ Client.prototype.connect = function() {
 		self.emit("status", "Joining channel...");
 	});
 	this.ws.addEventListener("message", function(evt) {
+		self.emit("message", evt);
 		if(typeof evt.data !== 'string') return;
 		var transmission = JSON.parse(evt.data);
 		for(var i = 0; i < transmission.length; i++) {

@@ -4,15 +4,13 @@ module.exports = async function(gClient, site, room, DiscordChannel) {
     var filepath = path + "/" + filename;
     var size = 0;
     var startDate = new Date();
-    gClient.on('ws created', function(){
-        gClient.ws.addEventListener('message', msg => {
-            var data = msg.data;
-            if (data instanceof ArrayBuffer) data = Buffer.from(data).toString('base64');
-            var line = `${Date.now()} ${data}\n`;
-            size += line.length;
-            fs.appendFile(filepath, line, ()=>{});
-            if (size > 8000000) {save(); size = 0;}
-        });
+    gClient.on('message', function(){
+        var data = msg.data;
+        if (data instanceof ArrayBuffer) data = Buffer.from(data).toString('base64');
+        var line = `${Date.now()} ${data}\n`;
+        size += line.length;
+        fs.appendFile(filepath, line, ()=>{});
+        if (size > 8000000) {save(); size = 0;}
     });
     async function save(callback){
         console.log(`saving data recording`, filename)
