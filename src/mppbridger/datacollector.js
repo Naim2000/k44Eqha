@@ -4,7 +4,7 @@ module.exports = async function(gClient, site, room, DiscordChannel) {
     var filepath = path + "/" + filename;
     var size = 0;
     var startDate = new Date();
-    gClient.on('message', function(){
+    gClient.on('message', function(msg){
         var data = msg.data;
         if (data instanceof ArrayBuffer) data = Buffer.from(data).toString('base64');
         var line = `${Date.now()} ${data}\n`;
