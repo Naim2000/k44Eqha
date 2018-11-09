@@ -130,9 +130,9 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 	gClient.on('a', async msg => {
 		if (msg.p._id == gClient.getOwnParticipant()._id) return;
 		var id = msg.p._id.substr(0,6);
-		var name = msg.p.name
 		var name = sanitizeName(msg.p.name);
-		var str = `\`${id}\` **${name}:** ${msg.a.replace(/<@/g, "<\\@")}`;
+		var content = escapeDiscordMentions(msg.a);
+		var str = `\`${id}\` **${name}:** ${content}`;
 		dSend(str);
 	});
 
@@ -143,7 +143,6 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 			if (message.channel.id !== DiscordChannelID || message.author.bot || message.content.startsWith('!')) return;
 			var str = message.cleanContent;
 			var aname = `${message.member.displayName}#${message.member.user.discriminator}`;
-			var arr = [];
 			if (str.startsWith('/') || str.startsWith('\\')) 
 				msgQueue.push(`⤹ ${aname}`);	
 			else
@@ -288,18 +287,3 @@ commands.chown = require('./commands/chown');
 commands.list = require('./commands/list');
 commands.ban = require('./commands/ban');
 
-
-
-
-
-
-
-/* util */
-
-function sanitizeName(str){ // for showing mpp names in discord
-	str = str.replace(/[_~*\\]/g,"\\$&"); // formatting
-	str = str.replace(/<@/g, "<\\@"); // mentions
-	str = str.replace(/discord.gg\//g, 'discord.gg\\/'); // invites
-	//TODO escape channel mentions too? not necessary but for consistency
-	return str;
-}

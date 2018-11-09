@@ -21,11 +21,11 @@ var wasConnected = false;
             if (chatmsg.type == "message") {
                 //if (chatmsg.id != myId)
                 if (!chatmsg.content.startsWith('\u034f'))
-                    send2discord(`**${chatmsg.user.nick}:** ${chatmsg.content}`);
+                    send2discord(`**${sanitizeName(chatmsg.user.nick)}:** ${escapeDiscordMentions(chatmsg.content)}`);
             } else if (chatmsg.type == "join") {
-                send2discord(`__***${chatmsg.nick || chatmsg.id} joined.***__`);
+                send2discord(`__***${sanitizeName(chatmsg.nick || chatmsg.id)} joined.***__`);
             } else if (chatmsg.type == "leave") {
-                send2discord(`__***${chatmsg.nick || chatmsg.id} left.***__`);
+                send2discord(`__***${sanitizeName(chatmsg.nick || chatmsg.id)} left.***__`);
             }
         } /*else if (transmission.type == 'load') {
             myId = transmission.id;
