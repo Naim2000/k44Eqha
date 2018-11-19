@@ -50,7 +50,7 @@ dClient.once('ready', () => {
 
 	require('./local_events');
 	require('./commands');
-		require('./colorroles');
+		//require('./colorroles');
 		require('./mppbridger');
 	require('./screenshotter');
 	require('./misc');
