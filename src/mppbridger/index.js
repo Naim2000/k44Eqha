@@ -43,6 +43,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 		site == "CMPC" ? new Client("ws://charsy.meowbin.com:16562") :
 		undefined;
 	if (!gClient) return console.error(`Invalid site ${site}`);
+	gClient.on("error", error => console.error(`[${site}][${room}]`, error.message))
 	gClient.setChannel(/*(site == "MPP" && room == "lobby") ? "lolwutsecretlobbybackdoor" : */room);
 	gClient.start();
 

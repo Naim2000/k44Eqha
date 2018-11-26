@@ -111,10 +111,8 @@ Client.prototype.connect = function() {
 		setTimeout(self.connect.bind(self), ms);
 	});
 	this.ws.addEventListener("error", function(error) {
-		console.error(error.toString());
+		self.emit("error", error);
 		self.ws.emit("close");
-		//self.emit('disconnect', error.toString()); //TODO
-		//if (error.toString() == "Error: unexpected server response (403)") process.exit();
 	});
 	this.ws.addEventListener("open", function(evt) {
 		self.connectionTime = Date.now();
