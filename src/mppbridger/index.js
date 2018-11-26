@@ -96,6 +96,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 			lastCh = msg.ch._id;
 
 		});
+		gClient.on("disconnect", () => lastCh = undefined);
 	}
 	
 	
