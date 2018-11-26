@@ -36,7 +36,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 
 
 	const gClient = 
-		site == "MPP"  ? new Client("ws://www.multiplayerpiano.com:443") :
+		site == "MPP"  ? new Client("ws://mpp-proxy-server-mpp-proxy-server.7e14.starter-us-west-2.openshiftapps.com/") :
 		site == "WOPP" ? new Client("ws://ourworldofpixels.com:1234") :
 		site == "MPT"  ? new Client("wss://ts.terrium.net:8443") :
 		site == "VFDP" ? new Client("ws://www.visualfiredev.com:8080") :
