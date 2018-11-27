@@ -36,7 +36,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 
 
 	const gClient = 
-		site == "MPP"  ? new Client("ws://mpp-proxy-server-mpp-proxy-server.7e14.starter-us-west-2.openshiftapps.com/") :
+		site == "MPP"  ? new Client((site == "MPP" && room == "lobby") ? "ws://mc.terrium.net:28886/?target=ws://www.multiplayerpiano.com:443&origin=http://www.multiplayerpiano.com" : "ws://mpp-proxy-server-mpp-proxy-server.7e14.starter-us-west-2.openshiftapps.com/") :
 		site == "WOPP" ? new Client("ws://ourworldofpixels.com:1234") :
 		site == "MPT"  ? new Client("wss://ts.terrium.net:8443") :
 		site == "VFDP" ? new Client("ws://www.visualfiredev.com:8080") :
@@ -64,7 +64,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 	});
 	gClient.on('hi', ()=>{
 		console.log(`[${site}][${room}] Received greeting`);
-		if (!testmode) gClient.sendArray([{m: "userset", set: {name: config.mppname}}])
+		if (!testmode || !(site == "MPP" && room == "lobby")) gClient.sendArray([{m: "userset", set: {name: config.mppname}}])
 	});
 	gClient.on('disconnect', () => {
 		if (isConnected) {
