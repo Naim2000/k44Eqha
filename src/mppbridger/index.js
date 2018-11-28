@@ -36,14 +36,13 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 
 
 	const gClient = 
-		site == "MPP"  ? new Client((site == "MPP" && room == "lobby") ? "ws://mc.terrium.net:28886/?target=ws://www.multiplayerpiano.com:443&origin=http://www.multiplayerpiano.com" : "ws://mpp-proxy-server-mpp-proxy-server.7e14.starter-us-west-2.openshiftapps.com/") :
+		site == "MPP"  ? new Client((site == "MPP" && room == "lobby") ? "ws://mc.terrium.net:28886/?target=ws://www.multiplayerpiano.com:443&origin=http://www.multiplayerpiano.com" : "ws://www.multiplayerpiano.com:443") :
 		site == "WOPP" ? new Client("ws://ourworldofpixels.com:1234") :
 		site == "MPT"  ? new Client("wss://ts.terrium.net:8443") :
 		site == "VFDP" ? new Client("ws://www.visualfiredev.com:8080") :
 		site == "CMPC" ? new Client("ws://charsy.meowbin.com:16562") :
 		undefined;
 	if (!gClient) return console.error(`Invalid site ${site}`);
-	gClient.on("error", error => console.error(`[${site}][${room}]`, error.message))
 	gClient.setChannel(/*(site == "MPP" && room == "lobby") ? "lolwutsecretlobbybackdoor" : */room);
 	gClient.start();
 
@@ -56,6 +55,10 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 	}, 1000);
 
 
+	gClient.on("error", error => {
+		console.error(`[${site}][${room}]`, error.message);
+		dSend(`**${error.message}**`);
+	});
 	var isConnected = false; // TODO use gClient.isConnected() ?
 	gClient.on('connect', () => {
 		console.log(`[${site}][${room}] Connected to server`);
