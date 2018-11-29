@@ -94,7 +94,7 @@ Client.prototype.connect = function() {
 		clearInterval(self.pingInterval);
 		clearInterval(self.noteFlushInterval);
 
-		self.emit("disconnect");
+		self.emit("disconnect", evt);
 		self.emit("status", "Offline mode");
 
 		// reconnect!
@@ -112,7 +112,7 @@ Client.prototype.connect = function() {
 	});
 	this.ws.addEventListener("error", function(error) {
 		self.emit("error", error);
-		self.ws.emit("close");
+		self.ws.emit("close", error);
 	});
 	this.ws.addEventListener("open", function(evt) {
 		self.connectionTime = Date.now();
