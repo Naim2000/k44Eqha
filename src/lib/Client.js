@@ -112,7 +112,6 @@ Client.prototype.connect = function() {
 	});
 	this.ws.addEventListener("error", function(error) {
 		self.emit("error", error);
-		self.ws.emit("close", error);
 	});
 	this.ws.addEventListener("open", function(evt) {
 		self.connectionTime = Date.now();
