@@ -54,10 +54,14 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 			gClient.setChannel(room); 
 	}, 1000);
 
-
+	let lastError;
 	gClient.on("error", error => {
 		console.error(`[${site}][${room}]`, error.message);
-		dSend(`**${error.message}**`);
+		error = error.toString();
+		if (lastError != error) {
+			dSend(`**${error.toString()}**`);
+			lastError = error;
+		}
 	});
 	var isConnected = false; // TODO use gClient.isConnected() ?
 	gClient.on('connect', () => {
