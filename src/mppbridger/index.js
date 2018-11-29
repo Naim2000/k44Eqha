@@ -36,7 +36,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 
 
 	const gClient = 
-		site == "MPP"  ? new Client((site == "MPP" && room == "lobby") ? "ws://mc.terrium.net:28886/?target=ws://www.multiplayerpiano.com:443&origin=http://www.multiplayerpiano.com" : "ws://www.multiplayerpiano.com:443") :
+		site == "MPP"  ? new Client((site == "MPP" && room == "lobby") ? "ws://mc.terrium.net:28886/?target=ws://www.multiplayerpiano.com:443&origin=http://www.multiplayerpiano.com" : (site == "MPP" && room == "lobby2") ? "wss://lector.serveo.net/?target=ws://www.multiplayerpiano.com:443&origin=http://www.multiplayerpiano.com" : "ws://www.multiplayerpiano.com:443") :
 		site == "WOPP" ? new Client("ws://ourworldofpixels.com:1234") :
 		site == "MPT"  ? new Client("wss://ts.terrium.net:8443") :
 		site == "VFDP" ? new Client("ws://www.visualfiredev.com:8080") :
