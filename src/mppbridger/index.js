@@ -72,7 +72,15 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 	});
 	gClient.on('hi', ()=>{
 		console.log(`[${site}][${room}] Received greeting`);
-		if (!testmode) if (!(site == "MPP" && room == "lobby")) gClient.sendArray([{m: "userset", set: {name: config.mppname}}])
+		if (!testmode) {
+			if (site == "MPP") {
+				if (room != "lobby") {
+					gClient.sendArray([{m: "userset", set: {name: "Anonymous" }}]);
+				}
+			} else {
+				gClient.sendArray([{m: "userset", set: {name: config.mppname }}]);
+			}
+		}
 	});
 	gClient.on('disconnect', () => {
 		if (isConnected) {
