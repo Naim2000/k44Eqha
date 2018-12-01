@@ -81,6 +81,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 				gClient.sendArray([{m: "userset", set: {name: config.mppname }}]);
 			}
 		}
+		gClient.sendArray([{m:'m',x:Math.floor(Math.random()*100),y:Math.floor(Math.random()*100)}])
 	});
 	gClient.on('disconnect', () => {
 		if (isConnected) {
