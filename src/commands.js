@@ -33,36 +33,6 @@ global.commands = {
 		}
 	},
 
-
-	"createtextchannel":{
-		usage: "<name>",
-		description: "Creates a generic text channel in this server and gives you full permissions for it.",
-		exec: async function (msg) {
-			if (!msg.args[0]) return "EBADUSG";
-			//var name = msg.txt(1).replace(/[^a-zA-Z0-9]/g, '-').substr(0,100).toLowerCase();
-			var name = msg.txt(1);
-			msg.guild.channels.create(name, {
-				parent: config.channels.user_channels,
-				overwrites: [
-					{
-						id: msg,
-						allow: [
-							"SEND_MESSAGES",
-							"MANAGE_MESSAGES",
-							"MANAGE_CHANNELS",
-							"MANAGE_ROLES",
-							"MANAGE_WEBHOOKS"
-						]
-					}
-				]
-			}).then(channel => {
-				msg.reply(`${channel}`);
-			}, error=>{
-				msg.reply(`:warning: Failed to create channel. \`\`\` ${error} \`\`\``);
-			});
-		}
-	},
-
 	'delete': {
 		usage: "[channel]",
 		aliases: ['archive'],
