@@ -1,11 +1,21 @@
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0; //TODO fix
 
 var WebSocket = require('ws');
 var Discord = require('discord.js');
+var createWsMessageCollector = require('./datacollector');
+
+var webhook = new Discord.WebhookClient(config.webhooks.ddp[0], config.webhooks.ddp[1], {disableEveryone:true});
 
 var ws;
 var wasConnected = false;
 //var myId;
+
+var collectWsMessage = createWsMessageCollector(async function(data, startDate, endDate){
+    await ws.send({files:[{
+        attachment: data,
+        name: `daydun piano main raw data recording from ${startDate.toISOString()} to ${endDate.toISOString()} .txt.gz`
+    }]});
+});
 
 (function connect() {
     ws = new WebSocket("wss://daydun.com:5012/?nick=%5Bdiscord.gg%2Fk44Eqha%5D");
@@ -14,6 +24,7 @@ var wasConnected = false;
         wasConnected = true;
     });
     ws.on("message", message => {
+        collectWsMessage(message);
         if (typeof message != 'string') return;
         var transmission = JSON.parse(message);
         if (transmission.type == 'chat') {
@@ -38,8 +49,6 @@ var wasConnected = false;
         setTimeout(connect, 5000);
     });
 })();
-
-var webhook = new Discord.WebhookClient(config.webhooks.ddp[0], config.webhooks.ddp[1], {disableEveryone:true});
 
 function send2discord(message) {
     webhook.send(message, {split:{char:'',maxLength:2000}});

@@ -246,7 +246,12 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 			require('./namecollector').collect(participant);
 		});
 		// record raw data
-		require('./datacollector')(gClient, site, room, DiscordChannel);
+		//require('./datacollector')(gClient, site, room, DiscordChannel);
+		let createWSMessageCollector = require("../datacollector")
+		gClient.on("message", createWSMessageCollector(async function(data, startDate, endDate){
+			var attachmentName = `${site} ${room} raw data recording from ${startDate.toISOString()} to ${endDate.toISOString()} .txt.gz`;
+			await DiscordChannel.send(new Discord.MessageAttachment(data, attachmentName));
+		}));
 	}
 
 	if (!clients[site]) clients[site] = {};
