@@ -5,7 +5,7 @@ var zlib = require('zlib');
 // Collects inputted messages to a file and gzips them every time it reaches 8mb,
 // and sends it to the output callback function.
 // For recording websocket data to a discord channel.
-module.exports = async function createWSMessageCollector(output) { // output func must be async
+module.exports = function createWSMessageCollector(output) { // output func must be async
     var filepath = os.tmpdir() + "/" + Math.random().toString(36).substring(2);
     var size = 0;
     var startDate = new Date();
