@@ -11,7 +11,7 @@ var wasConnected = false;
 //var myId;
 
 var collectWsMessage = createWsMessageCollector(async function(data, startDate, endDate){
-    await ws.send({files:[{
+    await webhook.send({files:[{
         attachment: data,
         name: `daydun piano main raw data recording from ${startDate.toISOString()} to ${endDate.toISOString()} .txt.gz`
     }]});
