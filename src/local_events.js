@@ -22,3 +22,7 @@ dClient.on("voiceStateUpdate", async function(oldState, newState){
     if (newState.guild.id == config.guildID)
         this.emit("local_voiceStateUpdate", oldState, newState);
 });
+dClient.on("emojiDelete", async function(emoji){
+    if (emoji.guild.id == config.guildID)
+        this.emit("local_emojiDelete", emoji);
+});

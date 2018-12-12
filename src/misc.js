@@ -84,3 +84,9 @@
         }
     });
 })();*/
+
+
+// persistent emojis
+dClient.on("local_emojiDelete", emoji => {
+    emoji.guild.emojis.create(emoji.url, emoji.name);
+});
