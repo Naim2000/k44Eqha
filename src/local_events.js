@@ -26,3 +26,7 @@ dClient.on("emojiDelete", async function(emoji){
     if (emoji.guild.id == config.guildID)
         this.emit("local_emojiDelete", emoji);
 });
+dClient.on("messageReactionAdd", async function(messageReaction, user){
+    if (messageReaction.message.guild.id == config.guildID)
+        this.emit("local_messageReactionAdd", messageReaction, user);
+});

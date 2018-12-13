@@ -9,7 +9,8 @@ module.exports = {
 	"webhooks": {
         "welcome": process.env.WEBHOOK_WELCOME.split("/"),
         "error": process.env.WEBHOOK_ERROR.split("/"),
-        "ddp": process.env.WEBHOOK_DDP.split("/")
+        "ddp": process.env.WEBHOOK_DDP.split("/"),
+        "pinboard": process.env.WEBHOOK_PINBOARD.split("/")
 	},
 	
     "opID": "281134216115257344",

@@ -87,6 +87,44 @@
 
 
 // persistent emojis
-dClient.on("local_emojiDelete", emoji => {
-    emoji.guild.emojis.create(emoji.url, emoji.name);
+dClient.on("local_emojiDelete", async emoji => {
+    await emoji.guild.emojis.create(emoji.url, emoji.name);
 });
+
+
+// pinboard
+(async function(){
+    var webhook = new Discord.WebhookClient(config.webhooks.pinboard[0], config.webhooks.pinboard[1]);
+    dClient.on("local_messageReactionAdd", async (messageReaction, user) => {
+        if (!(messageReaction.emoji.name == "📌" || messageReaction.emoji.name == "📍")) return;
+        if (!(user.id == messageReaction.message.author.id || messageReaction.message.guild.members.get(user.id).hasPermission('MANAGE_MESSAGES'))) return;// if message is theirs or user is mod
+        var message = messageReaction.message;
+        await webhook.send(`https://discordapp.com/channels/${message.guild.id}${message.channel.id}/${message.id}`, {embeds:[{
+            color: (message.member && message.member.displayColor) || undefined,
+            author: {
+                name: (message.member && message.member.displayName) || message.author.username,
+                icon_url: message.author.avatarURL({format:'png'})
+            },
+            description: message.content,
+            timestamp: message.createdAt,
+            image: (message.attachments.first() && message.attachments.first().width) ? {url:message.attachments.first().url} : undefined,
+            footer: {
+                text: `#${message.channel.name}`
+            }
+        }]});
+    });
+})();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
