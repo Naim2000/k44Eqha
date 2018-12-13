@@ -1,5 +1,4 @@
 
-
 // join/leave
 (async function(){
     var webhook = new Discord.WebhookClient(config.webhooks.welcome[0], config.webhooks.welcome[1]);
@@ -99,7 +98,7 @@ dClient.on("local_emojiDelete", async emoji => {
         if (!(messageReaction.emoji.name == "📌" || messageReaction.emoji.name == "📍")) return;
         if (!(user.id == messageReaction.message.author.id || messageReaction.message.guild.members.get(user.id).hasPermission('MANAGE_MESSAGES'))) return;// if message is theirs or user is mod
         var message = messageReaction.message;
-        await webhook.send(`https://discordapp.com/channels/${message.guild.id}${message.channel.id}/${message.id}`, {embeds:[{
+        await webhook.send(`https://discordapp.com/channels/${message.guild.id}/${message.channel.id}/${message.id}`, {embeds:[{
             color: (message.member && message.member.displayColor) || undefined,
             author: {
                 name: (message.member && message.member.displayName) || message.author.username,
