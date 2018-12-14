@@ -180,6 +180,8 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 
 
 	// announce join/leave/rename
+	gClient._events.p = gClient._events.p || [];
+	gClient._events.bye = gClient._events.bye || [];
 	gClient._events.p.unshift(async participant => {
 	    if (gClient.ppl[participant.id]) { // is update
 	        let oldName = gClient.ppl[participant.id].name, newName = participant.name;
