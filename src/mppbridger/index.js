@@ -190,7 +190,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 	    }
 	});
 	gClient.prependListener("bye", async msg => {
-	    var participant = MPP.client.ppl[msg.p];
+	    var participant = gClient.ppl[msg.p];
         dSend(`\`${participant._id.substr(0,6)}\` ___**${sanitizeName(participant.name)}** left the room.___`);
     });
 
