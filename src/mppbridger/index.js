@@ -179,14 +179,20 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 
 
 
-	// announce join/leave
-	gClient.on("p", async participant => {
-	    dSend(`\`${participant._id.substr(0,6)}\` ___**${sanitizeName(participant.name)}** entered the room.___`);
+	// announce join/leave/rename
+	gClient._events.p.unshift(async participant => {
+	    if (gClient.ppl[participant.id]) { // is update
+	        let oldName = gClient.ppl[participant.id].name, newName = participant.name;
+	        if (newName != oldName)
+	            dSend(`\`${participant._id.substr(0,6)}\` ___**${sanitizeName(oldName)}** changed their name to **${sanitizeName(newName)}**___`);
+	    } else { // is join
+	        dSend(`\`${participant._id.substr(0,6)}\` ___**${sanitizeName(participant.name)}** entered the room.___`);
+	    }
 	});
 	gClient._events.bye.unshift(async msg => {
 	    var participant = MPP.client.ppl[msg.p];
         dSend(`\`${participant._id.substr(0,6)}\` ___**${sanitizeName(participant.name)}** left the room.___`);
-    })
+    });
 
 
 
