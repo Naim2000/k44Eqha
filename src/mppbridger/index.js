@@ -43,7 +43,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 		site == "CMPC" ? new Client("ws://charsy.meowbin.com:16562") :
 		undefined;
 	if (!gClient) return console.error(`Invalid site ${site}`);
-	gClient.setChannel(/*(site == "MPP" && room == "lobby") ? "lolwutsecretlobbybackdoor" : */room, {visible: room == "심심"});
+	gClient.setChannel(/*(site == "MPP" && room == "lobby") ? "lolwutsecretlobbybackdoor" : */room, {visible:false});
 	gClient.start();
 
 	// maintain the client's presence in the channel
@@ -51,7 +51,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 		// if client is connected and not in a channel (meaning setChannel failed due to ratelimit because another client joined a channel with the same user within the last second) OR client is in a channel but it is not the right channel…
 		if ((gClient.isConnected() && !gClient.channel) || (gClient.channel && gClient.channel._id != room)) 
 			// …set the channel!
-			gClient.setChannel(room, {visible: room == "심심"});
+			gClient.setChannel(room, {visible:false}); 
 	}, 1000);
 
 	let lastError;
