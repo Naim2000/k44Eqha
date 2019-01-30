@@ -1,12 +1,11 @@
-
 // join/leave
 (async function(){
     var webhook = new Discord.WebhookClient(config.webhooks.welcome[0], config.webhooks.welcome[1]);
     dClient.on('local_guildMemberAdd', async member => {
-        webhook.send(`${member} joined.`, {username: member.user.username, avatarURL: member.user.displayAvatarURL(), disableEveryone:true});
+        webhook.send(`${member} joined.`, {username: member.user.username, avatarURL: member.user.displayAvatarURL({format:'png',size:2048}), disableEveryone:true});
     });
     dClient.on('local_guildMemberRemove', async member => {
-        webhook.send(`${member.user.tag} left.`, {username: member.user.username, avatarURL: member.user.displayAvatarURL(), disableEveryone:true});
+        webhook.send(`${member.user.tag} left.`, {username: member.user.username, avatarURL: member.user.displayAvatarURL({format:'png',size:2048}), disableEveryone:true});
     });
 })();
 
