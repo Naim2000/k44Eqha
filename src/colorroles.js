@@ -102,7 +102,7 @@ dClient.on('local_guildMemberRemove', async member => { // update (delete) color
 commands.color = {
 	aliases: ["col"],
 	usage: "<ColorResolvable>",
-	description: "Changes your color",
+	description: "Changes your color, or the color of your role. You can use a hex code or one of the color names listed [here](https://discord.js.org/#/docs/main/master/typedef/ColorResolvable), but not RGB arrays. Color names are not case sensitive. Invalid colors will make you colorless. You cannot change your color if you are offline or invisible.",
 	exec: async function (message) {
 		var str = message.txt(1);
 		if (!str) return false;
@@ -122,22 +122,33 @@ commands.color = {
 			let a = 0;
 			while (!(role = colorRoles.findColorRole(message.member)) && a++ < 10) {}
 		}*/
-		role.setColor(str.toUpperCase());
-		message.react("🆗");
+		await role.setColor(str.toUpperCase());
+		await message.react("🆗");
 	}
 }
 
 commands.title = {
 	aliases: ["tit"],
 	usage: "<title>",
-	description: "Sets your title (the name of your color role).\nUse “none” to clear your title.",
+	description: "Sets your title, or the name of your colored role. Titles longer than 98 chars will be truncated. You cannot change your title if you are invisible.\nUse “none” to clear your title.",
 	exec: async function (message) {
 		var str = message.txt(1);
 		if (!str) return false;
 		if (str == "none") str = "";
 		if (str.length > 98) str = str.substr(0,97) + '…';
-		var role = message.member.roles.find(role => role.name.startsWith('['));
-		role.setName(`[${str}]`);
-		message.react("🆗");
+		var role = colorRoles.findColorRole(message.member);
+		if (!role) {
+			if (message.member.presence.status == "offline")
+			   return message.reply([
+					"You are offline.",
+					"I can't change your color when you're invisible."
+			   ].random());
+			else {
+				await colorRoles.update(message.member);
+				role = colorRoles.findColorRole(message.member);
+			}
+		}
+		await role.setName(`[${str}]`);
+		await message.react("🆗");
 	}
 }
