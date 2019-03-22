@@ -42,4 +42,6 @@ module.exports = {
         "Breastmilk ♥ 7:45 AM"
     ],
 
+    "owop_captcha_password": process.env.OWOP_CAPTCHA_PASSWORD,
+
 }

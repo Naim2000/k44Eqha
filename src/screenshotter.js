@@ -19,7 +19,10 @@ global.screenshotter = {
 			}
 			try {
 				await page.goto('http://ourworldofpixels.com');
-				await page.evaluate(function () { OWOP.camera.zoom = 1; });
+				await page.evaluate(function () {
+					localStorage.owopcaptcha = require('./config').owop_captcha_password;
+					OWOP.camera.zoom = 1;
+				});
 				await new Promise(resolve => setTimeout(resolve, 2000));
 				await page.evaluate(function () {
 					for (let butt of document.getElementsByTagName('button')) {
