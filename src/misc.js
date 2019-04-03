@@ -50,7 +50,7 @@
 
 // arrange bots at bottom of list
 (async function(){
-    let prefix = "\udb40\udc00";
+    let prefix = "\udb40\uddf0";
     let onNick = async member => {
     if (member.user.bot && !member.displayName.startsWith(prefix))
         await member.setNickname(`${prefix}${member.displayName}`.substr(0,32));
