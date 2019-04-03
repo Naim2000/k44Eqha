@@ -86,6 +86,7 @@
 
 // persistent emojis
 dClient.on("local_emojiDelete", async emoji => {
+    if (global.disableEmojiProtection) return;
     await emoji.guild.emojis.create(emoji.url, emoji.name);
 });
 
