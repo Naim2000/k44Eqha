@@ -100,7 +100,7 @@ dClient.on('local_guildMemberRemove', async member => { // update (delete) color
 // commands
 
 commands.color = {
-	aliases: ["col"],
+	aliases: ["col", "colour"],
 	usage: "<ColorResolvable>",
 	description: "Changes your color, or the color of your role. You can use a hex code or one of the color names listed [here](https://discord.js.org/#/docs/main/master/typedef/ColorResolvable), but not RGB arrays. Color names are not case sensitive. Invalid colors will make you colorless. You cannot change your color if you are offline or invisible.",
 	exec: async function (message) {
