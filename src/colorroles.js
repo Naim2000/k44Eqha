@@ -57,30 +57,36 @@ colorRoles.update = async function (member) { // create or remove member's color
 };
 
 colorRoles.updateAll = async function() { // update all members' color roles
+    console.log("Updating all color roles");
 	var guild = dClient.defaultGuild || dClient.guilds.get(config.guildID);
 	await guild.members.fetch(); // load all members
 	for (let member of guild.members) {
 		member = member[1];
 		try {
 			await colorRoles.update(member);
-		} catch(e) {  //TODO debug
+			console.log("Updated", member.user.tag);
+		} catch(e) {
 			console.error(e.stack);
 		}
 	}
+	console.log("Finished updating all color roles");
 };
 
 colorRoles.pruneOrphanRoles = async function() { // delete all color roles that have no member
+    console.log("Pruning orphan roles");
 	var guild = dClient.defaultGuild || dClient.guilds.get(config.guildID);
 	for (let role of guild.roles) {
 		role = role[1];
 		if (role.name.startsWith('[') && !role.members.size) {
 			try {
 				await role.delete();
+				console.log("Deleted role ", role.id, role.name, role.color, role.permissions);
 			} catch (e) {
 				console.error(e);
 			}
 		}
 	}
+	console.log("Finished pruning orphan roles");
 };
 
 
@@ -96,6 +102,12 @@ dClient.on('local_presenceUpdate', async (oldPresence, newPresence) => { // upda
 
 dClient.on('local_guildMemberRemove', async member => { // update (delete) color role on member leave
 	await colorRoles.update(member);
+});
+
+dClient.on('error', async (error) => {
+    if (error.message == "Maximum number of guild roles reached (250)") {
+        await colorRoles.pruneOrphanRoles();
+    }
 });
 
 
