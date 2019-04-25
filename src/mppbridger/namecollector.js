@@ -3,6 +3,7 @@ var nameCollector = module.exports = {
 	collect: async function (participant) {
 		if (config.testmode) return;
 		if (participant.name == "Anonymous" || participant.name == "Anonymoose") return;
+		await new Promise(r => setTimeout(r, Math.random() * 10000));
 
 		var newMsg = function(continued){
 			var str = `__**${participant._id}**__${continued ? ' (continued)' : ''}\n${participant.name}`;
