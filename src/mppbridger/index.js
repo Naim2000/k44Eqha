@@ -160,7 +160,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 	{
 		let msgQueue = [];
 		dClient.on('message', async message => {
-			if (message.channel.id !== DiscordChannelID || message.author.bot || message.content.startsWith('!')) return;
+			if (message.channel.id !== DiscordChannelID || message.author.id == dClient.user.id /*|| message.content.startsWith('!')*/) return;
 			var str = message.cleanContent;
 			var aname = `${message.member.displayName}#${message.member.user.discriminator}`;
 			if (str.startsWith('/') || str.startsWith('\\')) 
