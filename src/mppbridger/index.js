@@ -29,7 +29,7 @@ global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site =
 			if (msgBuffer.length == 0) return;
 			_dSend(msgBuffer.join('\n'));
 			msgBuffer = [];
-		}, 2000);
+		}, 3000);
 	}
 	
 
