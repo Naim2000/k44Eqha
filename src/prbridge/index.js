@@ -5,7 +5,7 @@ let client = new PRClient({// account stuff
 	password: "vWmnsEkgAPcU3VR",
 	roomName: 'lobby'
 });
-dClient.once("ready", () => client.connect());
+client.connect();
 client.socket.on("setRoom", function (data, callback) {
 	client.roomID = data.roomID;
 	try {
@@ -28,7 +28,8 @@ async function messagehandle(data) {
                     let color = data.color;
                     let id = data.id;
 					if (id == "[discord.gg/k44Eqha]") return;
-                    dClient.channels.get("593943518351982603").send(`**${sanitizeName(name)}:** ${escapeDiscordMentions(data.message)}`);
+					let c = dClient.channels.get("593943518351982603");
+                    if (c) c.send(`**${sanitizeName(name)}:** ${escapeDiscordMentions(data.message)}`);
                 }
                 break;
         }
