@@ -1,7 +1,5 @@
 const socketCluster = require("socketcluster-client")
 const EventEmitter = require("events").EventEmitter;
-const HttpsProxyAgent = require("https-proxy-agent");
-const SocksProxyAgent = require("socks-proxy-agent");
 class PRClient extends EventEmitter {
     constructor(credentials, options) {
         super()

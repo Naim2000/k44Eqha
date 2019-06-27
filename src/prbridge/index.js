@@ -1,28 +1,23 @@
 const PRClient = require("./PRClient.js");
-evalcmd();
-const Discord = require("discord.js");
-const dclient = new Discord.Client();
-dclient.login("no u");
-dclient.on('ready', () => {
-    let client = new PRClient({// account stuff
-        username: "Discord",
-        password: "vWmnsEkgAPcU3VR",
-        roomName: 'lobby'
-    });
-    client.connect();
-    client.socket.on("setRoom", function (data, callback) {
-        client.roomID = data.roomID;
-        try {
-            if (client.channels.chatChannel && client.roomID) {
-                client.socket.destroyChannel(client.roomID);
-            }
-        } catch (err) {}
-        client.channels.chatChannel = client.socket.subscribe(data.roomID);
-        client.channels.chatChannel.watch(messagehandle);
-    })
+
+let client = new PRClient({// account stuff
+	username: "Discord",
+	password: "vWmnsEkgAPcU3VR",
+	roomName: 'lobby'
+});
+dClient.once("ready", () => client.connect());
+client.socket.on("setRoom", function (data, callback) {
+	client.roomID = data.roomID;
+	try {
+		if (client.channels.chatChannel && client.roomID) {
+			client.socket.destroyChannel(client.roomID);
+		}
+	} catch (err) {}
+	client.channels.chatChannel = client.socket.subscribe(data.roomID);
+	client.channels.chatChannel.watch(messagehandle);
 })
 
-function messagehandle(data) {
+async function messagehandle(data) {
     if (data && data.type) {
         switch (data.type) {
             case "chat":
@@ -32,40 +27,22 @@ function messagehandle(data) {
                     let roomName = data.roomName;
                     let color = data.color;
                     let id = data.id;
-                    if (data.notify)
-                        console.log("NOTIFY: " + data.message);
-
-                    console.log(`${name}: ${data.message}`);
-                    dclient.channels.get("380431177812803584").send(`${name}: ${data.message}`);
+					if (id == "[discord.gg/k44Eqha]") return;
+                    dClient.channels.get("593943518351982603").send(`**${sanitizeName(name)}:** ${escapeDiscordMentions(data.message)}`);
                 }
                 break;
         }
     }
 }
 
-function evalcmd() {
-    //with all optional parameters set to opposite of default
-    const {
-        EntoliPrompt
-    } = require('entoli');
-    let EP = new EntoliPrompt('', {
-        enterMessage: false,
-        exitMessage: false,
-        preventExit: false
+dClient.on("local_message", async message => {
+	client.socket.publish("fcf6e7e5-1d9a-48ee-808f-a9b626ce090b", {
+		"type": "chat",
+		"message": `${message.member.displayName}#${message.author.discriminator}: ${message.cleanContent + (message.attachments.size > 0 && message.attachments.map(x => x.url).join(' ') || '')}`,
+		"value": false,
+		"socketID": "[discord.gg/k44Eqha]",
+		"uuid": "[discord.gg/k44Eqha]",
+		"color": "#8012ed",
+		"name": "[discord.gg/k44Eqha]"
     });
-    EP().then((a) => {
-        client.socket.publish("fcf6e7e5-1d9a-48ee-808f-a9b626ce090b", {
-            "type": "chat",
-            "message": a.toString(),
-            "value": false,
-            "socketID": "󠀀[discord.gg/k44Eqha]",
-            "uuid": "󠀀[discord.gg/k44Eqha]",
-            "color": "#8012ed",
-            "name": "󠀀[discord.gg/k44Eqha]"
-        })
-        evalcmd();
-    }).catch((e) => {
-        console.error(e);
-        evalcmd();
-    });
-}
+});
