@@ -5,6 +5,7 @@ let client = new PRClient({// account stuff
 	password: "vWmnsEkgAPcU3VR",
 	roomName: 'lobby'
 });
+global.prClient = client;
 client.connect();
 client.socket.on("setRoom", function (data, callback) {
 	client.roomID = data.roomID;
