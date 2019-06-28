@@ -38,7 +38,7 @@ async function messagehandle(data) {
 }
 
 dClient.on("local_message", async message => {
-	if (message.channel.id != "593943518351982603") return;
+	if (message.channel.id != "593943518351982603" || message.author.id == dClient.user.id) return;
 	if (!client.roomID) return;
 	client.socket.publish(client.roomID, {
 		"type": "chat",
