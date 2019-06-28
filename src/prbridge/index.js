@@ -42,7 +42,7 @@ dClient.on("local_message", async message => {
 	if (!client.roomID) return;
 	client.socket.publish(client.roomID, {
 		"type": "chat",
-		"message": `${message.member.displayName}#${message.author.discriminator}: ${message.cleanContent + (message.attachments.size > 0 && message.attachments.map(x => x.url).join(' ') || '')}`,
+		"message": `${message.member && message.member.displayName || message.author.username}#${message.author.discriminator}: ${message.cleanContent + (message.attachments.size > 0 && message.attachments.map(x => x.url).join(' ') || '')}`,
 		"value": false,
 		"socketID": "[discord.gg/k44Eqha]",
 		"uuid": "[discord.gg/k44Eqha]",
