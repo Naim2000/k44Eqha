@@ -38,7 +38,8 @@ async function messagehandle(data) {
 
 dClient.on("local_message", async message => {
 	if (message.channel.id != "593943518351982603") return;
-	client.socket.publish("fcf6e7e5-1d9a-48ee-808f-a9b626ce090b", {
+	if (!client.roomID) return;
+	client.socket.publish(client.roomID, {
 		"type": "chat",
 		"message": `${message.member.displayName}#${message.author.discriminator}: ${message.cleanContent + (message.attachments.size > 0 && message.attachments.map(x => x.url).join(' ') || '')}`,
 		"value": false,
