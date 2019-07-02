@@ -4,7 +4,7 @@
 		"discord.js": "github:hydrabolt/discord.js#60ad9053a3f7d0cfcfe9871bc5aa6eca791caf02",
 		"mongodb": "^3.0.0-rc0",
 		"pg": "^7.4.0",
-		"puppeteer": "^0.13.0",
+		"puppeteer": "^1.18.1",
 		"socketcluster-client": "^14.2.2",
 		"ws": "^3.3.2"
 	}
