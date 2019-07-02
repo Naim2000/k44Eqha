@@ -55,5 +55,6 @@ dClient.once('ready', () => {
 	require('./screenshotter');
 	require('./misc');
 	require('./ddpbridge');
+	require('./prbridge');
 
 });
