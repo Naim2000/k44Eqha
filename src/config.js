@@ -43,5 +43,6 @@ module.exports = {
     ],
 
     "owop_captcha_password": process.env.OWOP_CAPTCHA_PASSWORD,
+    "pr_password": process.env.PR_PASSWORD
 
 }

@@ -2,7 +2,7 @@ const PRClient = require("./PRClient.js");
 
 let client = new PRClient({// account stuff
 	username: "Discord",
-	password: "vWmnsEkgAPcU3VR",
+	password: config.pr_password,
 	roomName: 'lobby'
 });
 global.prClient = client;
