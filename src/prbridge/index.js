@@ -28,9 +28,11 @@ async function messagehandle(data) {
                     let roomName = data.roomName;
                     let color = data.color;
                     let id = data.id;
-					if (id == "[discord.gg/k44Eqha]") return;
+					if (id == client.socket.id) return;
 					let c = dClient.channels.get("593943518351982603");
-                    if (c) c.send(`**${sanitizeName(name)}:** ${escapeDiscordMentions(data.message)}`);
+					let msg;
+				    (!name && (data.message.startsWith("[i]") || data.message.startsWith("[d]"))) ? msg = `*${escapeDiscordMentions(data.message)}*` : msg = `**${sanitizeName(name)}:** ${escapeDiscordMentions(data.message)}`;
+                    if (c) c.send(msg);
                 }
                 break;
         }
