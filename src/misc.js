@@ -86,8 +86,22 @@
 
 // persistent emojis
 dClient.on("local_emojiDelete", async emoji => {
+    console.log("emoji deleted:", emoji.name, emoji.url);
     if (global.disableEmojiProtection) return;
-    await emoji.guild.emojis.create(emoji.url, emoji.name);
+    if (emoji.name.toLowerCase().includes('delete')) return;
+    async function readdEmoji() {
+        await emoji.guild.emojis.create(emoji.url, emoji.name);
+        delete readdEmoji;
+    }
+    // re-add emoji in 5 to 10 minutes
+    setTimeout(() => {
+        if (readdEmoji) readdEmoji();
+    }, 300000 + Math.random() * 300000);
+    // wouldn't want emoji to be lost if process is stopped before timeout ends
+    exitHook(callback => {
+        if (readdEmoji) readdEmoji().then(() => callback());
+        else callback();
+    });
 });
 
 
