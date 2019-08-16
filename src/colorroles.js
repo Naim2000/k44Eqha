@@ -95,20 +95,31 @@ colorRoles.pruneOrphanRoles = async function() { // delete all color roles that 
 
 // event listeners
 
-dClient.on('local_presenceUpdate', async (oldPresence, newPresence) => { // update color role on presence update // emitted also on member join (iirc)
-	if (oldPresence && (oldPresence.status == newPresence.status)) return;
-	await colorRoles.update(newPresence.member);
+dClient.on('local_presenceUpdate', async (oldPresence, newPresence) => {
+	//if (oldPresence && (oldPresence.status == newPresence.status)) return; // don't constantly add/remove roles anymore
+	// add role when person goes online
+	if (newPresence.status != "offline")
+		await colorRoles.update(newPresence.member);
+	// and do not remove until we run out of roles
 });
 
 dClient.on('local_guildMemberRemove', async member => { // update (delete) color role on member leave
 	await colorRoles.update(member);
 });
 
-dClient.on('error', async (error) => {
-    if (error.message == "Maximum number of guild roles reached (250)") {
-        await colorRoles.pruneOrphanRoles();
-    }
-});
+{
+	let lastRoleMaintenance;
+	dClient.on('error', async (error) => {
+		if (Date.now() - lastRoleMaintenance < 600000) return; // in case errors are spammed, don't try running maintenance if it was already done within 10 mins ago
+		lastRoleMaintenance = Date.now();
+		if (error.message == "Maximum number of guild roles reached (250)") {
+			console.log("Ran out of roles; running maintenance");
+			await colorRoles.updateAll(); // remove roles from offline users when we run out of roles
+			await colorRoles.pruneOrphanRoles(); // remove any roles whose member doesn't exist anymore
+		}
+	});
+}
+
 
 
 
