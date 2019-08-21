@@ -95,6 +95,7 @@ colorRoles.pruneOrphanRoles = async function() { // delete all color roles that 
 
 // event listeners
 
+/*
 dClient.on('local_presenceUpdate', async (oldPresence, newPresence) => {
 	//if (oldPresence && (oldPresence.status == newPresence.status)) return; // don't constantly add/remove roles anymore
 	// add role when person goes online
@@ -119,6 +120,7 @@ dClient.on('local_guildMemberRemove', async member => { // update (delete) color
 		}
 	});
 }
+*/
 
 
 
