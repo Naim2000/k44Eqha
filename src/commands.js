@@ -136,7 +136,7 @@ dClient.on('local_message', async message => {
 	Object.keys(commands).forEach(commandName => {
 		var command = commands[commandName];
 		if (!(commandName === cmd || (command.aliases && command.aliases.includes(cmd)))) return;
-		if (command.op && message.author.id !== config.opID) return message.react('🚫');
+		if (command.op && !config.opIDs.includes(message.author.id)) return message.react('🚫');
 		command.exec(message, args, txt).then(
 			(res) => {
 				switch (res) {
