@@ -105,7 +105,7 @@ dClient.on("local_emojiDelete", async emoji => {
 });
 
 
-// pinboard
+// pinboard // this was removed but no harm leaving it working ¯\_(ツ)_/¯
 (async function(){
     var webhook = new Discord.WebhookClient(config.webhooks.pinboard[0], config.webhooks.pinboard[1]);
     dClient.on("local_messageReactionAdd", async (messageReaction, user) => {
@@ -129,8 +129,11 @@ dClient.on("local_emojiDelete", async emoji => {
 })();
 
 
-
-
+// allow anyone to pin a message via reaction
+dClient.on("local_messageReactionAdd", async (messageReaction) => {
+    if (messageReaction.emoji.name == "📌" || messageReaction.emoji.name == "📍")
+        await messageReaction.message.pin();
+});
 
 
 
