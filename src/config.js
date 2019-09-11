@@ -13,8 +13,8 @@ module.exports = {
         "pinboard": process.env.WEBHOOK_PINBOARD.split("/")
 	},
 	
-    "opID": "281134216115257344", //TODO make sure nothing else is using this
-    "opIDs": ["281134216115257344", "330499035419115522"],
+    "opID": "330499035419115522",
+    "opIDs": ["281134216115257344", "330499035419115522"], //TODO i dont need multiple ops anymore
     "guildID": testmode ? "467473467634089985" : "321819041348190249",
 
     "channels": { // includes voice channels & category channels
