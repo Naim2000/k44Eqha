@@ -9,7 +9,7 @@ module.exports = {
 		var site = 'MPP';
 		var room = msg.txt(1);
 		if (!room) return "EBADUSG";
-		var existingBridge = (await dbClient.query('SELECT * FROM bridges WHERE mpp_room = $1;', [room])).rows[0];
+		var existingBridge = (await dbClient.query("SELECT * FROM bridges WHERE mpp_room = $1 AND site = 'MPP';", [room])).rows[0];
 		if (existingBridge) {
 			if (!existingBridge.disabled) {
 				return msg.reply(`${site} room ${room} is already bridged.`);
@@ -18,7 +18,7 @@ module.exports = {
 					return msg.reply(`You cannot bridge this room.`);
 				} else /* rebridge */ {
 					let channel = dClient.guilds.get(config.guildID).channels.get(existingBridge.discord_channel_id);
-					await dbClient.query("UPDATE bridges SET disabled = false WHERE mpp_room = $1", [room]);
+					await dbClient.query("UPDATE bridges SET disabled = false WHERE mpp_room = $1 AND site = 'MPP'", [room]);
 					await channel.setParent(config.channels.mpp_bridges);
 					await new Promise(resolve => setTimeout(resolve, 500));
 					await channel.lockPermissions();
