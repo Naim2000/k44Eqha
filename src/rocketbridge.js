@@ -64,7 +64,7 @@
         if (m.u._id == driver.userId) return;
         if (!m.mentions && !m.channels) return;
         var dcid;
-        for (let x in channelIdMap) if (channelIdMap[X] == m.rid) dcid = x;
+        for (let x in channelIdMap) if (channelIdMap[x] == m.rid) dcid = x;
         if (!dcid) return;
         var dc = dClient.channels.get(dcid);
         if (!dc.wh) {
