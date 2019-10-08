@@ -141,10 +141,10 @@ dClient.on('local_message', async message => {
 			(res) => {
 				switch (res) {
 					case "ENOTBRIDGE":
-						message.channel.send([
+						message.channel.send(random([
 							`This is not a bridged channel.`,
 							`You can only use this command in a bridged channel.`
-						].random());
+						]));
 						break;
 					case "EBADUSG":
 						message.channel.send(`**Usage:** \`!${commandName} ${command.usage}\``);

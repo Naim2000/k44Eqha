@@ -1,6 +1,6 @@
 
-Array.prototype.random = function () {
-    return this[Math.floor(Math.random() * this.length)]
+global.random = function (array) {
+    return array[Math.floor(Math.random() * array.length)]
 }
 
 global.sanitizeName = function sanitizeName(str){ // for showing names in discord

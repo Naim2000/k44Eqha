@@ -139,10 +139,10 @@ commands.color = {
 		var role = colorRoles.findColorRole(message.member);
 		if (!role) {
 			if (message.member.presence.status == "offline")
-			   return message.reply([
+			   return message.reply(random([
 					"You are offline.",
 					"I can't change your color when you're invisible."
-			   ].random());
+			   ]));
 			else {
 				await colorRoles.update(message.member);
 				role = colorRoles.findColorRole(message.member);
@@ -169,10 +169,10 @@ commands.title = {
 		var role = colorRoles.findColorRole(message.member);
 		if (!role) {
 			if (message.member.presence.status == "offline")
-			   return message.reply([
+			   return message.reply(random([
 					"You are offline.",
 					"I can't change your color when you're invisible."
-			   ].random());
+			   ]));
 			else {
 				await colorRoles.update(message.member);
 				role = colorRoles.findColorRole(message.member);
