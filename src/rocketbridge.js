@@ -30,9 +30,8 @@
             title_link: attachment.url,
             title_link_download: true,
             image_url: attachment.width ? attachment.url : undefined,
-            audio_url: [".ogg", ".mp3", ".wav", ".flac"].some(ext=>attachment.filename.endsWith(ext)) ? attachment.url : undefined,
-            video_url: [".mp4", ".webm", ".mov", ".avi"].some(ext=>attachment.filename.endsWith(ext)) ? attachment.url : undefined
-
+            audio_url: [".ogg", ".mp3", ".wav", ".flac"].some(ext=>attachment.name.endsWith(ext)) ? attachment.url : undefined,
+            video_url: [".mp4", ".webm", ".mov", ".avi"].some(ext=>attachment.name.endsWith(ext)) ? attachment.url : undefined
         }));
         message.rcmsg = await driver.sendMessage(rcmsg);
     });
