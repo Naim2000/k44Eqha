@@ -63,7 +63,8 @@
         else receivedRcMsgIDs.push(m._id);
         if (m.u._id == driver.userId) return;
         if (!m.mentions && !m.channels) return;
-        for (var dcid in channelIdMap) if (channelIdMap[dcid] == m.rid) break; // hhh
+        var dcid;
+        for (let x in channelIdMap) if (channelIdMap[dcid] == m.rid) dcid = x;
         if (!dcid) return;
         var dc = dClient.channels.get(dcid);
         if (!dc.wh) {
