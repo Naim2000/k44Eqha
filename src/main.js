@@ -56,5 +56,6 @@ dClient.once('ready', () => {
 	require('./misc');
 	require('./ddpbridge');
 	require('./prbridge');
+	require('./rocketbridge.js');
 
 });
