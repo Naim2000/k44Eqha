@@ -1,5 +1,6 @@
 {
 	"dependencies": {
+		"@rocket.chat/sdk": "^0.2.9-2",
 		"async-exit-hook": "^2.0.1",
 		"discord.js": "github:hydrabolt/discord.js#60ad9053a3f7d0cfcfe9871bc5aa6eca791caf02",
 		"mongodb": "^3.0.0-rc0",

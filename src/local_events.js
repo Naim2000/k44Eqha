@@ -14,6 +14,14 @@ dClient.on("message", async function(message){
     if (message.guild && message.guild.id == config.guildID)
         this.emit("local_message", message);
 });
+dClient.on("messageUpdate", async function(oldMessage, newMessage){
+    if (newMessage.guild && newMessage.guild.id == config.guildID)
+        this.emit("local_messageUpdate", oldMessage, newMessage);
+});
+dClient.on("messageDelete", async function(message){
+    if (message.guild && message.guild.id == config.guildID)
+        this.emit("local_messageDelete", message);
+});
 dClient.on("presenceUpdate", async function(oldPresence, newPresence){
     if (newPresence.member && newPresence.member.guild.id == config.guildID)
         this.emit("local_presenceUpdate", oldPresence, newPresence);
