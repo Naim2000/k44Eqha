@@ -24,7 +24,7 @@
         rcmsg.rid = rid;
         rcmsg.msg = message.cleanContent;
         rcmsg.alias = message.member && message.member.displayName || message.author.username;
-        rcmsg.avatar = message.author.avatarURL || message.author.defaultAvatarURL;
+        rcmsg.avatar = message.author.avatarURL({size:64}) || message.author.defaultAvatarURL;
         rcmsg.attachments = message.attachments.array().map(attachment => ({
             title: attachment.filename,
             title_link: attachment.url,
