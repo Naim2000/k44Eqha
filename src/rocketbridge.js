@@ -25,14 +25,27 @@
         rcmsg.msg = message.cleanContent;
         rcmsg.alias = message.member && message.member.displayName || message.author.username;
         rcmsg.avatar = message.author.avatarURL || message.author.defaultAvatarURL;
-        rcmsg.attachments = message.attachments.map(attachment => ({
+        rcmsg.attachments = message.attachments.array().map(attachment => ({
             title: attachment.filename,
             title_link: attachment.url,
             title_link_download: true,
             image_url: attachment.width ? attachment.url : undefined,
             audio_url: [".ogg", ".mp3", ".wav", ".flac"].some(ext=>attachment.name.endsWith(ext)) ? attachment.url : undefined,
             video_url: [".mp4", ".webm", ".mov", ".avi"].some(ext=>attachment.name.endsWith(ext)) ? attachment.url : undefined
-        }));
+        })).concat(message.embeds.map(embed => embed.type == "rich" ? {
+            author_name: embed.author && embed.author.name,
+            author_link: embed.author && embed.author.url,
+            author_icon: embed.author && embed.author.iconURL,
+            title: embed.title,
+            title_link: embed.url,
+            title_link_download: false,
+            color: embed.hexColor,
+            text: embed.description,
+            image_url: embed.image && embed.image.url,
+            thumb_url: embed.thumbnail && embed.thumbnail.url,
+            fields: embed.fields && embed.fields.map(f => ({title: f.name, value: f.value, short: f.inline})),
+            ts: embed.timestamp
+        } : undefined)).filter(x=>x);
         message.rcmsg = await driver.sendMessage(rcmsg);
     });
 	dClient.on("local_messageUpdate", async function (oldMessage, newMessage) {
