@@ -48,9 +48,9 @@
 }*/// didn't work D:
 
 
-// arrange bots at bottom of list
+/*// arrange bots at bottom of list
 (async function(){
-    let prefix = "\udb40\uddf0";
+    let prefix = "\udb40\uddf0";//TODO find new chars that aren't filtered
     let onNick = async member => {
     if (member.user.bot && !member.displayName.startsWith(prefix))
         await member.setNickname(`${prefix}${member.displayName}`.substr(0,32));
@@ -59,7 +59,7 @@
     dClient.on('local_guildMemberUpdate', async (oldMember, newMember) => {
         if (newMember.displayName != oldMember.displayName) await onNick(newMember);
     });
-})();
+})();*/
 
 
 // prevent identical display names
