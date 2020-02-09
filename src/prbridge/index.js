@@ -27,11 +27,11 @@ async function messagehandle(data) {
                     let effect = data.effect || "";
                     let roomName = data.roomName;
                     let color = data.color;
-                    let id = data.id;
+                    let id = data.sID || data.socketID || data.id;
 					if (id == client.socket.id) return;
 					let c = dClient.channels.get("593943518351982603");
 					let msg;
-				    (!name && (data.message.startsWith("[i]") || data.message.startsWith("[d]"))) ? msg = `*${escapeDiscordMentions(data.message)}*` : msg = `**${sanitizeName(name)}:** ${escapeDiscordMentions(data.message)}`;
+				    (!name && (data.message.startsWith("[i]"))) ? msg = `*${escapeDiscordMentions(data.message.split("[i]")[1])}*` : msg = `**${sanitizeName(name)}:** ${escapeDiscordMentions(data.message)}`;
                     if (c) c.send(msg);
                 }
                 break;
