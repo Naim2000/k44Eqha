@@ -8,7 +8,10 @@ global.screenshotter = {
 			await page.setViewport({ width: 1440, height: 900 });
 			try {
 				await page.goto('http://www.multiplayerpiano.com/lobby');
-				await page.evaluate(function () { document.getElementById('modal').click() });
+				await page.evaluate(function () {
+					document.getElementById('modal').click();
+					MPP.client.uri = "ws://530s.gq:28886";
+				});
 				await new Promise(resolve => setTimeout(resolve, 5000));
 				let screenshot = await page.screenshot({ type: 'png' });
 				let filename = `Screenshot of www.multiplayerpiano.com/lobby @ ${new Date().toISOString()}.png`;
