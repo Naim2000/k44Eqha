@@ -10,7 +10,7 @@ global.screenshotter = {
 				await page.goto('http://www.multiplayerpiano.com/lobby');
 				await page.evaluate(function () {
 					document.getElementById('modal').click();
-					MPP.client.uri = "ws://530s.gq:28886";
+					MPP.client.uri = "ws://530s.gq/mpp-proxy";
 				});
 				await new Promise(resolve => setTimeout(resolve, 5000));
 				let screenshot = await page.screenshot({ type: 'png' });
