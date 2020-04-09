@@ -2,6 +2,13 @@
     global.RocketChat = require("@rocket.chat/sdk");
     var driver = RocketChat.driver;
     var api = RocketChat.api;
+	
+    driver.useLog({
+        debug: ()=>{},
+        info: ()=>{},
+        warn: x => onError(x, 'Rocket.chat Warning'),
+        error: x => onError(x, 'Rocket.chat Error')
+    });
 
     await driver.connect();
 	await driver.login(); // using environment variables
