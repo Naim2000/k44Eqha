@@ -31,7 +31,7 @@ module.exports = {
 			}
 		}
 		/* new bridge */
-		var discordChannelName = room.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
+		var discordChannelName = room;
 		var categoryID = config.channels.mpp_bridges;
 		var channel = await dClient.guilds.resolve(config.guildID).channels.create(discordChannelName, {parent: categoryID});
 		channel.setTopic(`http://www.multiplayerpiano.com/${encodeURIComponent(room)}`);
