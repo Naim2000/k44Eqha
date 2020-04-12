@@ -19,10 +19,10 @@
     dClient.on('local_voiceStateUpdate', async (oldState, newState) => {
         if (oldState.channelID != vcid && newState.channelID == vcid) {
             // member joined the channel
-            newState.member.roles.add(newState.member.guild.roles.get(rid));
+            newState.member.roles.add(newState.member.guild.roles.resolve(rid));
         } else if (oldState.channelID == vcid && newState.channelID != vcid) {
             // member left the channel
-            newState.member.roles.remove(newState.member.guild.roles.get(rid));
+            newState.member.roles.remove(newState.member.guild.roles.resolve(rid));
         }
     });
 })();
@@ -112,7 +112,7 @@ dClient.on("local_emojiDelete", async emoji => {
     var webhook = new Discord.WebhookClient(config.webhooks.pinboard[0], config.webhooks.pinboard[1]);
     dClient.on("local_messageReactionAdd", async (messageReaction, user) => {
         if (!(messageReaction.emoji.name == "📌" || messageReaction.emoji.name == "📍")) return;
-        if (!(user.id == messageReaction.message.author.id || messageReaction.message.guild.members.get(user.id).hasPermission('MANAGE_MESSAGES'))) return;// if message is theirs or user is mod
+        if (!(user.id == messageReaction.message.author.id || messageReaction.message.guild.members.resolve(user.id).hasPermission('MANAGE_MESSAGES'))) return;// if message is theirs or user is mod
         var message = messageReaction.message;
         await webhook.send(`https://discordapp.com/channels/${message.guild.id}/${message.channel.id}/${message.id}`, {embeds:[{
             color: (message.member && message.member.displayColor) || undefined,

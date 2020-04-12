@@ -130,8 +130,8 @@ dClient.on('local_message', async message => {
 	message.args = args;
 	message.cmd = cmd;
 	message.txt = function(i){return this.args.slice(i).join(' ')};
-	if (!message.guild) message.guild = dClient.guilds.get(config.guildID);
-	if (!message.member) message.member = dClient.guilds.get(config.guildID).members.get(message.author.id);
+	if (!message.guild) message.guild = dClient.guilds.resolve(config.guildID);
+	if (!message.member) message.member = dClient.guilds.resolve(config.guildID).members.resolve(message.author.id);
 	
 	Object.keys(commands).forEach(commandName => {
 		var command = commands[commandName];

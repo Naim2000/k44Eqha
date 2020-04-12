@@ -86,7 +86,7 @@
         var dcid;
         for (let x in channelIdMap) if (channelIdMap[x] == m.rid) dcid = x;
         if (!dcid) return;
-        var dc = dClient.channels.get(dcid);
+        var dc = dClient.channels.resolve(dcid);
         if (!dc.wh) {
             dc.wh = (await dc.fetchWebhooks()).find(w=>w.name=="fookat bridge");
         }

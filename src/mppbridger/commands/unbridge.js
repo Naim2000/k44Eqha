@@ -20,7 +20,7 @@ module.exports = {
 		await dbClient.query("UPDATE bridges SET disabled = 'true' WHERE mpp_room = $1", [bridge.mpp_room]);
 		var client = clients.MPP[bridge.mpp_room];
 		if (client) client.stop();
-		var channel = dClient.channels.get(bridge.discord_channel_id)
+		var channel = dClient.channels.resolve(bridge.discord_channel_id)
 		await channel.setParent(config.channels.deleted_bridges);
 		await new Promise(resolve => setTimeout(resolve, 500));
 		await channel.lockPermissions();

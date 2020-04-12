@@ -16,9 +16,9 @@ global.screenshotter = {
 				let screenshot = await page.screenshot({ type: 'png' });
 				let filename = `Screenshot of www.multiplayerpiano.com/lobby @ ${new Date().toISOString()}.png`;
 				let attachment = new Discord.MessageAttachment(screenshot, filename);
-				await dClient.channels.get(config.channels.mpp_screenshot).send(attachment);
+				await dClient.channels.resolve(config.channels.mpp_screenshot).send(attachment);
 			} catch (error) {
-				await dClient.channels.get(config.channels.mpp_screenshot).send(`:warning: ${error.stack}`);
+				await dClient.channels.resolve(config.channels.mpp_screenshot).send(`:warning: ${error.stack}`);
 			}
 			try {
 				await page.goto('http://ourworldofpixels.com');
@@ -36,9 +36,9 @@ global.screenshotter = {
 				let screenshot = await page.screenshot({ type: 'png' });
 				let filename = `Screenshot of ourworldofpixels.com/main @ ${new Date().toISOString()}.png`;
 				let attachment = new Discord.MessageAttachment(screenshot, filename);
-				await dClient.channels.get(config.channels.owop_screenshot).send(attachment);
+				await dClient.channels.resolve(config.channels.owop_screenshot).send(attachment);
 			} catch (error) {
-				await dClient.channels.get(config.channels.owop_screenshot).send(attachment);
+				await dClient.channels.resolve(config.channels.owop_screenshot).send(attachment);
 			}
 		} catch(error) {
 			console.error(`Error occured with screen capture:\n${error.stack}`)

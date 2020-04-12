@@ -17,7 +17,7 @@ module.exports = {
 				if (config.disabledRooms.includes(room)) {
 					return msg.reply(`You cannot bridge this room.`);
 				} else /* rebridge */ {
-					let channel = dClient.guilds.get(config.guildID).channels.get(existingBridge.discord_channel_id);
+					let channel = dClient.guilds.resolve(config.guildID).channels.resolve(existingBridge.discord_channel_id);
 					await dbClient.query("UPDATE bridges SET disabled = false WHERE mpp_room = $1 AND site = 'MPP'", [room]);
 					await channel.setParent(config.channels.mpp_bridges);
 					await new Promise(resolve => setTimeout(resolve, 500));
@@ -33,7 +33,7 @@ module.exports = {
 		/* new bridge */
 		var discordChannelName = room.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
 		var categoryID = config.channels.mpp_bridges;
-		var channel = await dClient.guilds.get(config.guildID).channels.create(discordChannelName, {parent: categoryID});
+		var channel = await dClient.guilds.resolve(config.guildID).channels.create(discordChannelName, {parent: categoryID});
 		channel.setTopic(`http://www.multiplayerpiano.com/${encodeURIComponent(room)}`);
 		var webhook = await channel.createWebhook('Webhook');
 		createMPPbridge(room, channel.id, site, webhook.id, webhook.token);

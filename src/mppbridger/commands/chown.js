@@ -10,7 +10,7 @@ module.exports = {
 		if (!(bridge.owner_discord_user_id == msg.author.id || msg.author.id == config.opID)) return msg.react('🚫');
 
 		if (msg.args[1] == 'discord') {
-			let selectedUser = dClient.users.get(msg.args[2]) || msg.mentions.users.first();
+			let selectedUser = dClient.users.resolve(msg.args[2]) || msg.mentions.users.first();
 			if (!selectedUser) return msg.react('⚠️');
 			msg.channel.overwritePermissions(selectedUser, {
 				MANAGE_CHANNELS: true,

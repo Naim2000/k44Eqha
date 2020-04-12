@@ -7,7 +7,7 @@ var nameCollector = module.exports = {
 
 		var newMsg = function(continued){
 			var str = `__**${participant._id}**__${continued ? ' (continued)' : ''}\n${participant.name}`;
-			return dClient.channels.get(config.channels.name_collection).send(str);
+			return dClient.channels.resolve(config.channels.name_collection).send(str);
 		}
 
 		var document = await this.collection.findOne({_id: participant._id});
@@ -18,7 +18,7 @@ var nameCollector = module.exports = {
 			document.names.push(participant.name);
 			this.collection.updateOne({_id: participant._id}, {$set:{names: document.names}});
 
-			let message = await dClient.channels.get(config.channels.name_collection).messages.fetch(document.discord_msg_id);
+			let message = await dClient.channels.resolve(config.channels.name_collection).messages.fetch(document.discord_msg_id);
 			try {
 				await message.edit(message.content + ', ' + participant.name);
 			} catch(e) {

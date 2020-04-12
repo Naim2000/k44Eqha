@@ -35,7 +35,7 @@ colorRoles.update = async function (member) { // create or remove member's color
 		let member_data = (await dbClient.query(`SELECT (color_role) FROM member_data WHERE id = $1`, [member.id])).rows[0];
 		if (member_data && member_data.color_role) { // it does, reinstantiate it
 			let dbrole = member_data.color_role;
-			let role = member.guild.roles.get(dbrole.id); // get existing role if it still exists somehow
+			let role = member.guild.roles.resolve(dbrole.id); // get existing role if it still exists somehow
 			if (!role) role = await member.guild.roles.create({data:{ // otherwise recreate it
 				name: dbrole.name,
 				color: dbrole.color,
@@ -58,7 +58,7 @@ colorRoles.update = async function (member) { // create or remove member's color
 
 colorRoles.updateAll = async function() { // update all members' color roles
     console.log("Updating all color roles");
-	var guild = dClient.defaultGuild || dClient.guilds.get(config.guildID);
+	var guild = dClient.defaultGuild || dClient.guilds.resolve(config.guildID);
 	await guild.members.fetch(); // load all members
 	for (let member of guild.members) {
 		member = member[1];
@@ -74,7 +74,7 @@ colorRoles.updateAll = async function() { // update all members' color roles
 
 colorRoles.pruneOrphanRoles = async function() { // delete all color roles that have no member
     console.log("Pruning orphan roles");
-	var guild = dClient.defaultGuild || dClient.guilds.get(config.guildID);
+	var guild = dClient.defaultGuild || dClient.guilds.resolve(config.guildID);
 	for (let role of guild.roles) {
 		role = role[1];
 		if (role.name.startsWith('[') && !role.members.size) {

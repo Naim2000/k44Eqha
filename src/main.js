@@ -46,7 +46,7 @@ dbClient.connect().then(function(){
 
 dClient.once('ready', () => {
 	console.log('Discord Client Ready');
-	dClient.defaultGuild = dClient.guilds.get(config.guildID);
+	dClient.defaultGuild = dClient.guilds.resolve(config.guildID);
 
 	require('./local_events');
 	require('./commands');

@@ -2,7 +2,7 @@ var Client = require('../lib/Client.js');
 global.clients = {};
 
 global.createMPPbridge = function createMPPbridge(room, DiscordChannelID, site = 'MPP', webhookID, webhookToken) {
-	var DiscordChannel = dClient.channels.get(DiscordChannelID);
+	var DiscordChannel = dClient.channels.resolve(DiscordChannelID);
 	if (!DiscordChannel) return console.error(`Couldn't bridge ${site} ${room} because Discord Channel ${DiscordChannelID} is missing!`);
 	if (webhookID && webhookToken) var webhook = new Discord.WebhookClient(webhookID, webhookToken, {disableEveryone:true});
 	
