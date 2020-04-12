@@ -2,8 +2,8 @@
 	"dependencies": {
 		"@rocket.chat/sdk": "^0.2.9-2",
 		"async-exit-hook": "^2.0.1",
-		"discord.js": "github:hydrabolt/discord.js#60ad9053a3f7d0cfcfe9871bc5aa6eca791caf02",
-		"mongodb": "^3.0.0-rc0",
+		"discord.js": "12.1.1",
+		"mongodb": "^3.5.5",
 		"pg": "^7.4.0",
 		"puppeteer": "^1.18.1",
 		"socketcluster-client": "^14.2.2",
