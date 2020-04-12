@@ -95,7 +95,7 @@
 				username: `${m.u.username} @ fookat.tk`.substr(0,32),
 				avatarURL: `https://fookat.tk/avatar/${m.u.username}?${process.pid}`,
 				split: true,
-				disableEveryone: true,
+				disableMentions: 'all',
 				embeds: m.attachments ? m.attachments.map(a => ({
 					title: a.title,
 					url: a.title_link ? "https://fookat.tk" + a.title_link : undefined,

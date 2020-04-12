@@ -3,11 +3,11 @@
     var webhook = new Discord.WebhookClient(config.webhooks.welcome[0], config.webhooks.welcome[1]);
     dClient.on('local_guildMemberAdd', async member => {
         let username = member.user.username.toLowerCase().includes('clyde') ? member.user.username.replace(/C/g,'Q').replace(/c/g,'q') : member.user.username;
-        webhook.send(`${member} joined.`, {username, avatarURL: member.user.displayAvatarURL({format:'png',size:2048}), disableEveryone:true});
+        webhook.send(`${member} joined.`, {username, avatarURL: member.user.displayAvatarURL({format:'png',size:2048}), disableMentions:'all'});
     });
     dClient.on('local_guildMemberRemove', async member => {
         let username = member.user.username.toLowerCase().includes('clyde') ? member.user.username.replace(/C/g,'Q').replace(/c/g,'q') : member.user.username;
-        webhook.send(`${member.user.tag} left.`, {username, avatarURL: member.user.displayAvatarURL({format:'png',size:2048}), disableEveryone:true});
+        webhook.send(`${member.user.tag} left.`, {username, avatarURL: member.user.displayAvatarURL({format:'png',size:2048}), disableMentions:'all'});
     });
 })();
 

@@ -4,7 +4,7 @@ var WebSocket = require('ws');
 var Discord = require('discord.js');
 var createWsMessageCollector = require('./datacollector');
 
-var webhook = new Discord.WebhookClient(config.webhooks.ddp[0], config.webhooks.ddp[1], {disableEveryone:true});
+var webhook = new Discord.WebhookClient(config.webhooks.ddp[0], config.webhooks.ddp[1], {disableMentions:'all'});
 
 var ws;
 var wasConnected = false;

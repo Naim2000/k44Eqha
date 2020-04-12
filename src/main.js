@@ -4,7 +4,7 @@ if (config.testmode) console.log('TEST MODE');
 global.exitHook = require('async-exit-hook');
 global.Discord = require('discord.js');
 global.fs = require('fs');
-global.dClient = new Discord.Client({ disableEveryone: true });
+global.dClient = new Discord.Client({ disableMentions: 'all' });
 
 // error handling
 {
