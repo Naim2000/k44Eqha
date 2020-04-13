@@ -29,7 +29,7 @@ global.dClient = new Discord.Client({
 	exitHook.uncaughtExceptionHandler(error => onError(error, "Uncaught Exception"));
 	dClient.on('error', error => onError(error, "Discord Client Error"));
 	dClient.on('warn', error => onError(error, "Discord Client Warning"));
-	//dClient.on('debug', console.log) // please don't do this if you don't want tons of WS Heartbeat things popping up in console
+	//dClient.on('debug', console.log) // please don't do this if you don't want tons of WS Heartbeat things popping up in console : https://i.imgur.com/C9wP73e.png
 }
 
 
