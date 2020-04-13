@@ -4,7 +4,16 @@ if (config.testmode) console.log('TEST MODE');
 global.exitHook = require('async-exit-hook');
 global.Discord = require('discord.js');
 global.fs = require('fs');
-global.dClient = new Discord.Client({ disableMentions: 'all' });
+global.dClient = new Discord.Client({ 
+	disableMentions: 'all',
+	presence: {
+		activity: {
+            name: `with Lamp`, //i think you're gonna comment this out whatever
+            type: 'PLAYING' //does look nice 
+        },
+        status: 'online',
+	} 
+});
 
 // error handling
 {
@@ -13,14 +22,14 @@ global.dClient = new Discord.Client({ disableMentions: 'all' });
 		let msg = error && (error.stack || error.message || error);
 		console.error(title + ':\n', msg);
 		try {
-			webhook.send(`${title ? `**${title}:**` : ""}\`\`\`\n${msg}\n\`\`\``).catch(()=>{});
+			webhook.send(`${title ? `**${title}:**` : ""}\`\`\`js\n${msg}\n\`\`\``).catch(()=>{}); // that js right there adds a kinda color // you know this
 		} catch(e) {}
 	}
 	process.on('unhandledRejection', error => onError(error, "Unhandled Rejection"));
 	exitHook.uncaughtExceptionHandler(error => onError(error, "Uncaught Exception"));
 	dClient.on('error', error => onError(error, "Discord Client Error"));
 	dClient.on('warn', error => onError(error, "Discord Client Warning"));
-
+	//dClient.on('debug', console.log) // please don't do this if you don't want tons of WS Heartbeat things popping up in console
 }
 
 

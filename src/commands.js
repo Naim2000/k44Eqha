@@ -77,7 +77,7 @@ global.commands = {
 			} catch (error) {
 				var out = error;
 			} finally {
-				message.channel.send('`'+out+'`', {split:{char:''}});
+				message.channel.send(`\`${out}\``, {split:{char:''}});
 			}
 		}
 	},

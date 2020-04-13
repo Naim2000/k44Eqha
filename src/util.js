@@ -6,7 +6,7 @@ global.random = function (array) {
 global.sanitizeName = function sanitizeName(str){ // for showing names in discord
 	str = str.replace(/[_~*\\]/g,"\\$&"); // formatting
 	str = escapeDiscordMentions(str); // mentions
-    str = str.replace(/discord.gg\//g, 'discord.gg\\/'); // invites
+    str = str.replace(/discord.gg\//g, 'discord.gg\\/'); // invites // discordapp.com/api/invite/ ? was it that? idk something like that but it also works
     str = str.replace(/(http|https):\/\//g, "$1\\://"); // urls
 	return str;
 }

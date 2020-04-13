@@ -14,7 +14,7 @@ module.exports = {
 	},
 	
     "opID": "330499035419115522",
-    "opIDs": ["281134216115257344", "330499035419115522"], //TODO i dont need multiple ops anymore
+    "opIDs": ["281134216115257344", "330499035419115522"], //TODO i dont need multiple ops anymore // -_-
     "guildID": testmode ? "467473467634089985" : "321819041348190249",
 
     "channels": { // includes voice channels & category channels
